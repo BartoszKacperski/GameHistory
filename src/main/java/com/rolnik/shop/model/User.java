@@ -14,7 +14,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 public class User extends SimpleEntity {
     private String login;
     private String email;

@@ -7,13 +7,15 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 
-@Entity(name = "players")
+@Entity
+@Table(name = "players")
 public class Player extends SimpleEntity {
     private String nickname;
 }
