@@ -1,26 +1,21 @@
 package com.rolnik.shop.model;
 
-import lombok.*;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
-import org.springframework.context.annotation.Primary;
+import com.rolnik.shop.model.base.SimpleEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Data
 
 @Entity(name = "users")
-@Audited
-public class User {
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
-
+public class User extends SimpleEntity {
     private String login;
     private String email;
     private String password;
@@ -31,7 +26,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @NotAudited
+
     private Set<Role> roles;
 
 }

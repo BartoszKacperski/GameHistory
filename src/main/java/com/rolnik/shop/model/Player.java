@@ -13,9 +13,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Data
 
-@Entity(name = "roles")
-public class Role extends SimpleEntity {
-    private String name;
-
-    private String description;
+@Entity(name = "players")
+public class Player extends SimpleEntity {
+    private String nickname;
 }
