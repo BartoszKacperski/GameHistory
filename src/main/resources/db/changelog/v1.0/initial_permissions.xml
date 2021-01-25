@@ -1,0 +1,61 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-1">
+        <createTable tableName="roles">
+            <column name="id" type="bigint(20)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)"/>
+            <column name="description" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-2" runOnChange="true">
+        <insert tableName="roles">
+            <column name="name" value="ADMIN"/>
+            <column name="description" value="ADMIN" />
+        </insert>
+        <insert tableName="roles">
+            <column name="name" value="USER"/>
+            <column name="description" value="USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-3">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="bigint(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigint(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-4">
+        <addPrimaryKey columnNames="user_id, role_id" tableName="user_roles"/>
+    </changeSet>
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-5">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_roles"
+                                 constraintName="FK_USER_ROLE_USER" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-6">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_roles"
+                                 constraintName="FK_USER_ROLE_ROLE" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="roles"/>
+    </changeSet>
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-7" runOnChange="true">
+        <insert tableName="user_roles">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="1" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>

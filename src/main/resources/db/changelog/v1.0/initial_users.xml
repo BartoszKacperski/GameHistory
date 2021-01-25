@@ -1,0 +1,26 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-1">
+        <createTable tableName="users">
+            <column name="id" type="bigint(20)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="bartosz.kacperski" id="05-01-2021-2">
+        <insert tableName="users">
+            <column name="login" value="bartosz"/>
+            <column name="email" value="bartosz@test.pl"/>
+            <column name="password" value="bartosz"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
