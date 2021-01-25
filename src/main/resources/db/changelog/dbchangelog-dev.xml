@@ -9,4 +9,5 @@
     <include file="v1.0/initial_permissions.xml" relativeToChangelogFile="true"/>
     <include file="v1.0/initial_player.xml" relativeToChangelogFile="true"/>
     <include file="v1.0/initial_game.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0/initial_round.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
