@@ -23,4 +23,10 @@
         </insert>
     </changeSet>
 
+    <changeSet author="bartosz.kacperski" id="04-02-2021-1">
+        <sql>
+            ALTER TABLE users CHANGE COLUMN login username varchar(255);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

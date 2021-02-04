@@ -17,7 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User extends SimpleEntity {
-    private String login;
+    private String username;
     private String email;
     private String password;
 
@@ -27,7 +27,6 @@ public class User extends SimpleEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-
     private Set<Role> roles;
 
 }
