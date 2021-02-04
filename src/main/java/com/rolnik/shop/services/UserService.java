@@ -10,13 +10,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @AllArgsConstructor
 
-@Component
+@Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -29,6 +29,7 @@ public class UserService implements UserDetailsService {
 
         Role userRole = roleRepository
                 .findByName("USER")
+                //TODO Change exception
                 .orElseThrow(() -> new RuntimeException("roleDoesNotExists"));
 
         user.setRoles(Set.of(userRole));

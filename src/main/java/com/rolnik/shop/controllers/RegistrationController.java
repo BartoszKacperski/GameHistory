@@ -1,6 +1,6 @@
 package com.rolnik.shop.controllers;
 
-import com.rolnik.shop.dto.UserRequest;
+import com.rolnik.shop.dto.UserCreate;
 import com.rolnik.shop.dto.UserResponse;
 import com.rolnik.shop.model.User;
 import com.rolnik.shop.services.UserService;
@@ -21,22 +21,21 @@ public class RegistrationController {
     private final UserService userService;
     private final ModelMapper modelMapper;
 
-
     @PostMapping(
             value = "/registration",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse registerUser(@RequestBody UserRequest userRequest){
-        User user = userService.registerUser(mapUser(userRequest));
+    public UserResponse registerUser(@RequestBody UserCreate userCreate){
+        User user = userService.registerUser(mapUser(userCreate));
 
         return mapUser(user);
     }
 
 
-    private User mapUser(UserRequest userRequest) {
-        return modelMapper.map(userRequest, User.class);
+    private User mapUser(UserCreate userCreate) {
+        return modelMapper.map(userCreate, User.class);
     }
 
     private UserResponse mapUser(User user) {

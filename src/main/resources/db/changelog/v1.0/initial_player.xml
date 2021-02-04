@@ -5,12 +5,11 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
 
     <changeSet author="bartosz.kacperski" id="25-01-2021-1">
-        <sql>
-            CREATE TABLE players (
-                id BIGINT(20) AUTO_INCREMENT PRIMARY KEY,
-                nickname VARCHAR(255) NOT NULL
-            )
-        </sql>
+        <createTable tableName="players">
+            <column name="id" type="BIGINT(20)" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

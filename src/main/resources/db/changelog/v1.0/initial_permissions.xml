@@ -52,10 +52,14 @@
                                  initiallyDeferred="false" referencedColumnNames="id" referencedTableName="roles"/>
     </changeSet>
 
-    <changeSet author="bartosz.kacperski" id="05-01-2021-7" runOnChange="true">
-        <insert tableName="user_roles">
-            <column name="user_id" value="1"/>
-            <column name="role_id" value="1" />
-        </insert>
+    <changeSet author="bartosz.kacperski" id="04-02-2021-1">
+        <update tableName="roles">
+            <column name="name" value="ROLE_USER"/>
+            <where>name = 'USER'</where>
+        </update>
+        <update tableName="roles">
+            <column name="name" value="ROLE_ADMIN"/>
+            <where>name = 'ADMIN'</where>
+        </update>
     </changeSet>
 </databaseChangeLog>

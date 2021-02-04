@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -18,9 +19,9 @@ public class UserAuthDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roles = user.getRoles().stream()
+        String[] roles = user.getRoles().stream()
                 .map(Role::getName)
-                .collect(Collectors.joining(","));
+                .toArray(String[]::new);
 
         return AuthorityUtils.createAuthorityList(roles);
     }
