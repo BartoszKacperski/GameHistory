@@ -3,6 +3,7 @@ package com.rolnik.shop.controllers;
 import com.rolnik.shop.dtos.game.GameCreateRequest;
 import com.rolnik.shop.dtos.game.GameCreateResponse;
 import com.rolnik.shop.dtos.game.GameDetailsResponse;
+import com.rolnik.shop.dtos.game.GameShortDetails;
 import com.rolnik.shop.dtos.round.RoundAddRequest;
 import com.rolnik.shop.dtos.round.RoundAddResponse;
 import com.rolnik.shop.model.entities.Game;
@@ -47,8 +48,8 @@ public class GameController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public List<GameDetailsResponse> getAll() {
-        return mapGamesDetailsResponse(gameService.getAll());
+    public List<GameShortDetails> getAll() {
+        return mapGamesShortDetailsResponse(gameService.getAll());
     }
 
     @DeleteMapping(
@@ -84,6 +85,16 @@ public class GameController {
     private List<GameDetailsResponse> mapGamesDetailsResponse(List<Game> games) {
         return games.stream()
                 .map(this::mapGameDetailsResponse)
+                .collect(Collectors.toList());
+    }
+
+    private GameShortDetails mapGameShortDetailsResponse(Game game) {
+        return modelMapper.map(game, GameShortDetails.class);
+    }
+
+    private List<GameShortDetails> mapGamesShortDetailsResponse(List<Game> games) {
+        return games.stream()
+                .map(this::mapGameShortDetailsResponse)
                 .collect(Collectors.toList());
     }
 
