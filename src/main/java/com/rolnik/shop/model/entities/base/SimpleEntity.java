@@ -1,4 +1,4 @@
-package com.rolnik.shop.model.base;
+package com.rolnik.shop.model.entities.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
