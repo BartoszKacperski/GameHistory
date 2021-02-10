@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,5 +15,5 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RoundAddResponse {
     private Long id;
-    private Set<PlayerRoundShortDetails> playerRounds;
+    private List<PlayerRoundShortDetails> playerRounds;
 }

@@ -82,12 +82,6 @@ public class GameController {
         return modelMapper.map(game, GameDetailsResponse.class);
     }
 
-    private List<GameDetailsResponse> mapGamesDetailsResponse(List<Game> games) {
-        return games.stream()
-                .map(this::mapGameDetailsResponse)
-                .collect(Collectors.toList());
-    }
-
     private GameShortDetails mapGameShortDetailsResponse(Game game) {
         return modelMapper.map(game, GameShortDetails.class);
     }
