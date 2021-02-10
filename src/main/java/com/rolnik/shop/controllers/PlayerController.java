@@ -1,9 +1,9 @@
 package com.rolnik.shop.controllers;
 
-import com.rolnik.shop.dto.PlayerCreateRequest;
-import com.rolnik.shop.dto.PlayerResponse;
-import com.rolnik.shop.dto.PlayerUpdateRequest;
-import com.rolnik.shop.model.Player;
+import com.rolnik.shop.dtos.player.PlayerCreateRequest;
+import com.rolnik.shop.dtos.player.PlayerResponse;
+import com.rolnik.shop.dtos.player.PlayerUpdateRequest;
+import com.rolnik.shop.model.entities.Player;
 import com.rolnik.shop.services.PlayerService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;

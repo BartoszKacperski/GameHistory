@@ -1,6 +1,6 @@
-package com.rolnik.shop.model;
+package com.rolnik.shop.model.entities;
 
-import com.rolnik.shop.model.base.SimpleEntity;
+import com.rolnik.shop.model.entities.base.SimpleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

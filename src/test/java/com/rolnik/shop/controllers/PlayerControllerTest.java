@@ -1,8 +1,8 @@
 package com.rolnik.shop.controllers;
 
-import com.rolnik.shop.dto.PlayerCreateRequest;
-import com.rolnik.shop.dto.PlayerUpdateRequest;
-import com.rolnik.shop.model.Player;
+import com.rolnik.shop.dtos.player.PlayerCreateRequest;
+import com.rolnik.shop.dtos.player.PlayerUpdateRequest;
+import com.rolnik.shop.model.entities.Player;
 import com.rolnik.shop.services.PlayerService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

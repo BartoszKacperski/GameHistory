@@ -1,14 +1,14 @@
-package com.rolnik.shop.dto;
+package com.rolnik.shop.dtos.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 
-public class PlayerUpdateRequest {
+public class UserCreateResponse {
     private Long id;
-    private String nickname;
+    private String username;
 }

@@ -1,6 +1,6 @@
-package com.rolnik.shop.model;
+package com.rolnik.shop.model.entities;
 
-import com.rolnik.shop.model.base.SimpleEntity;
+import com.rolnik.shop.model.entities.base.SimpleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,9 +15,7 @@ import javax.persistence.Table;
 @Data
 
 @Entity
-@Table(name = "roles")
-public class Role extends SimpleEntity {
-    private String name;
-
-    private String description;
+@Table(name = "players")
+public class Player extends SimpleEntity {
+    private String nickname;
 }

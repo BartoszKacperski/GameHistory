@@ -5,11 +5,17 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
 
     <changeSet author="bartosz.kacperski" id="25-01-2021-1">
-        <createTable tableName="players">
+        <createTable tableName="player_rounds">
             <column name="id" type="BIGINT(20)" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="nickname" type="VARCHAR(255)"/>
+            <column name="point" type="DECIMAL(18,2)"/>
+            <column name="player_id" type="BIGINT(20)">
+                <constraints references="players(id)" foreignKeyName="playerForeignKey"/>
+            </column>
+            <column name="round_id" type="BIGINT(20)">
+                <constraints references="rounds(id)" foreignKeyName="roundForeignKey"/>
+            </column>
         </createTable>
     </changeSet>
 

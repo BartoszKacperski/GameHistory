@@ -1,14 +1,13 @@
-package com.rolnik.shop.dto;
+package com.rolnik.shop.dtos.round;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 
-public class UserCreateResponse {
+public class RoundShortDetails {
     private Long id;
-    private String username;
 }

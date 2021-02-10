@@ -1,7 +1,7 @@
 package com.rolnik.shop.controllers;
 
-import com.rolnik.shop.dto.UserCreateRequest;
-import com.rolnik.shop.model.User;
+import com.rolnik.shop.dtos.user.UserCreateRequest;
+import com.rolnik.shop.model.entities.User;
 import org.assertj.core.util.Sets;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

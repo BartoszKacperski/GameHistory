@@ -1,13 +1,11 @@
 package com.rolnik.shop.services;
 
-import com.rolnik.shop.model.Role;
-import com.rolnik.shop.model.User;
+import com.rolnik.shop.model.entities.Role;
+import com.rolnik.shop.model.entities.User;
 import com.rolnik.shop.respositories.RoleRepository;
 import com.rolnik.shop.respositories.UserRepository;
 import com.rolnik.shop.security.UserAuthDetails;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

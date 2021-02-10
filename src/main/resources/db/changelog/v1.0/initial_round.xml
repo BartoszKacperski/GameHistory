@@ -9,14 +9,9 @@
             <column name="id" type="BIGINT(20)" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="point" type="DECIMAL(18,2)"/>
-            <column name="player_id" type="BIGINT(20)">
-                <constraints references="players(id)" foreignKeyName="playerForeignKey"/>
-            </column>
             <column name="game_id" type="BIGINT(20)">
                 <constraints references="games(id)" foreignKeyName="gameForeignKey"/>
             </column>
         </createTable>
     </changeSet>
-
 </databaseChangeLog>

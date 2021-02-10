@@ -1,16 +1,13 @@
 package com.rolnik.shop.security;
 
-import com.rolnik.shop.model.Role;
-import com.rolnik.shop.model.User;
-import liquibase.util.StringUtils;
+import com.rolnik.shop.model.entities.Role;
+import com.rolnik.shop.model.entities.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 

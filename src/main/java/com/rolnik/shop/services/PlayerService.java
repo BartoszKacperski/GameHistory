@@ -1,6 +1,6 @@
 package com.rolnik.shop.services;
 
-import com.rolnik.shop.model.Player;
+import com.rolnik.shop.model.entities.Player;
 import com.rolnik.shop.respositories.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

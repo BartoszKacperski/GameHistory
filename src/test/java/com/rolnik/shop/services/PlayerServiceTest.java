@@ -1,6 +1,6 @@
 package com.rolnik.shop.services;
 
-import com.rolnik.shop.model.Player;
+import com.rolnik.shop.model.entities.Player;
 import com.rolnik.shop.respositories.PlayerRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerServiceTest {

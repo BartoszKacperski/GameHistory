@@ -1,6 +1,6 @@
 package com.rolnik.shop.respositories;
 
-import com.rolnik.shop.model.Role;
+import com.rolnik.shop.model.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.rolnik.shop.respositories;
 
-import com.rolnik.shop.model.User;
+import com.rolnik.shop.model.entities.User;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

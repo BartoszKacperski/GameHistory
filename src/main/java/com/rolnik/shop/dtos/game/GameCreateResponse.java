@@ -1,14 +1,16 @@
-package com.rolnik.shop.dto;
+package com.rolnik.shop.dtos.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 
-public class PlayerResponse {
+public class GameCreateResponse {
     private Long id;
-    private String nickname;
+    private LocalDateTime date;
 }

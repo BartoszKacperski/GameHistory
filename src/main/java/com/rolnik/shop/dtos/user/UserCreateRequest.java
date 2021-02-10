@@ -1,4 +1,4 @@
-package com.rolnik.shop.dto;
+package com.rolnik.shop.dtos.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

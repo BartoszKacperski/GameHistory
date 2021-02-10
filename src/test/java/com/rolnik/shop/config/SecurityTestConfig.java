@@ -1,8 +1,8 @@
 package com.rolnik.shop.config;
 
 
-import com.rolnik.shop.model.Role;
-import com.rolnik.shop.model.User;
+import com.rolnik.shop.model.entities.Role;
+import com.rolnik.shop.model.entities.User;
 import com.rolnik.shop.security.UserAuthDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
