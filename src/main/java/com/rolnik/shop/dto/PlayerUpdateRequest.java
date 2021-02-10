@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 
-public class PlayerRequest {
+public class PlayerUpdateRequest {
+    private Long id;
     private String nickname;
 }

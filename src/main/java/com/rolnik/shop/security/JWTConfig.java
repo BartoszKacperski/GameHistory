@@ -26,6 +26,6 @@ public class JWTConfig {
     @Value("${auth.secret}")
     private String secret;
 
-    @Value("${auth.registration_path")
+    @Value("${auth.registration_path}")
     private String registrationPath;
 }

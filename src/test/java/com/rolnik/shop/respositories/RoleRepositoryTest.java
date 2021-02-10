@@ -1,6 +1,6 @@
 package com.rolnik.shop.respositories;
 
-import com.rolnik.shop.model.User;
+import com.rolnik.shop.model.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,38 +8,36 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-class UserRepositoryTest {
+class RoleRepositoryTest {
+
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     @Test
-    void whenFindByUsername_ThenReturnUser() {
+    void whenFindByName_ThenReturnRole() {
         //given
-        User user = new User(
-                "login",
-                "email",
-                "password",
-                Collections.emptySet()
+        Role role = new Role(
+                "TEST_ROLE",
+                "TEST DESCRIPTION"
         );
 
-        entityManager.persist(user);
+        entityManager.persist(role);
         entityManager.flush();
 
         //when
-        User foundUser = userRepository.findByUsername("login").orElse(null);
+        Role foundRole = roleRepository.findByName("TEST_ROLE").orElse(null);
 
         //then
-        assertNotNull(foundUser);
-        assertEquals(foundUser.getUsername(), user.getUsername());
+        assertNotNull(foundRole);
+        assertEquals(foundRole.getName(), role.getName());
 
     }
 }

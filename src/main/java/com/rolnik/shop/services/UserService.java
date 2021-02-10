@@ -6,6 +6,8 @@ import com.rolnik.shop.respositories.RoleRepository;
 import com.rolnik.shop.respositories.UserRepository;
 import com.rolnik.shop.security.UserAuthDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +30,7 @@ public class UserService implements UserDetailsService {
         user.setPassword(encryptedPassword);
 
         Role userRole = roleRepository
-                .findByName("USER")
+                .findByName("ROLE_USER")
                 //TODO Change exception
                 .orElseThrow(() -> new RuntimeException("roleDoesNotExists"));
 

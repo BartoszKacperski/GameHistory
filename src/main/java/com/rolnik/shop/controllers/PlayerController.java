@@ -1,65 +1,64 @@
 package com.rolnik.shop.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rolnik.shop.dto.PlayerRequest;
+import com.rolnik.shop.dto.PlayerCreateRequest;
+import com.rolnik.shop.dto.PlayerResponse;
+import com.rolnik.shop.dto.PlayerUpdateRequest;
 import com.rolnik.shop.model.Player;
 import com.rolnik.shop.services.PlayerService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 
 @RestController
+@RequestMapping("/players")
 public class PlayerController {
     private final PlayerService playerService;
     private final ModelMapper modelMapper;
 
     @PostMapping(
-            value = "/players",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public Player create(@RequestBody PlayerRequest playerRequest) {
-        return playerService.create(mapPlayer(playerRequest));
+    public Player create(@RequestBody PlayerCreateRequest playerCreateRequest) {
+        return playerService.create(mapPlayer(playerCreateRequest));
     }
 
     @GetMapping(
-            value = "/players/{id}",
+            value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public Player getAll(@PathVariable long id) {
-        return playerService.getById(id);
+    public PlayerResponse getById(@PathVariable long id) {
+        return mapPlayer(playerService.getById(id));
     }
 
     @GetMapping(
-            value = "/players",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public List<Player> getAll() {
-        return playerService.getAll();
+    public List<PlayerResponse> getAll() {
+        return mapPlayers(playerService.getAll());
     }
 
     @PutMapping(
-            value = "/players",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public Player update(@RequestBody Player player) {
-        return playerService.update(player);
+    public Player update(@RequestBody PlayerUpdateRequest playerUpdateRequest) {
+        return playerService.update(mapPlayer(playerUpdateRequest));
     }
 
     @DeleteMapping(
-            value = "/players/{id}"
+            value = "/{id}"
     )
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable long id) {
@@ -67,8 +66,21 @@ public class PlayerController {
     }
 
 
-    private Player mapPlayer(PlayerRequest playerRequest) {
-        return modelMapper.map(playerRequest, Player.class);
+    private Player mapPlayer(PlayerCreateRequest playerCreateRequest) {
+        return modelMapper.map(playerCreateRequest, Player.class);
     }
 
+    private PlayerResponse mapPlayer(Player player) {
+        return modelMapper.map(player, PlayerResponse.class);
+    }
+
+    private List<PlayerResponse> mapPlayers(List<Player> players) {
+        return players.stream()
+                .map(this::mapPlayer)
+                .collect(Collectors.toList());
+    }
+
+    private Player mapPlayer(PlayerUpdateRequest playerUpdateRequest) {
+        return modelMapper.map(playerUpdateRequest, Player.class);
+    }
 }
