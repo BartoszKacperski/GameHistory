@@ -5,10 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
@@ -18,8 +18,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "roles")
 public class Role extends SimpleEntity {
-    @Length(min = 3, max = 100)
+    @Size(min = 3, max = 100)
     private String name;
-    @Length(min = 3, max = 255)
+    @Size(min = 3, max = 255)
     private String description;
 }
