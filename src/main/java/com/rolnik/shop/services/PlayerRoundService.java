@@ -1,5 +1,6 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.respositories.PlayerRoundRepository;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,7 @@ public class PlayerRoundService {
 
     public PlayerRound getById(Long id) {
         return playerRoundRepository.findById(id)
-                //TODO change exception
-                .orElseThrow(() -> new RuntimeException("playerRound does not found"));
+                .orElseThrow(() -> new EntityNotFoundException(PlayerRound.class));
     }
 
     @Transactional

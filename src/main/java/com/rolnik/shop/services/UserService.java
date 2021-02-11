@@ -1,5 +1,6 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.model.entities.Role;
 import com.rolnik.shop.model.entities.User;
 import com.rolnik.shop.respositories.RoleRepository;
@@ -29,8 +30,7 @@ public class UserService implements UserDetailsService {
 
         Role userRole = roleRepository
                 .findByName("ROLE_USER")
-                //TODO Change exception
-                .orElseThrow(() -> new RuntimeException("roleDoesNotExists"));
+                .orElseThrow(() -> new EntityNotFoundException(Role.class));
 
         user.setRoles(Set.of(userRole));
 

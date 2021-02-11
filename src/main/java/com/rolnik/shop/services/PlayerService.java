@@ -1,6 +1,8 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.model.entities.Player;
+import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.respositories.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,7 @@ public class PlayerService {
 
     public Player getById(long id) {
         return playerRepository.findById(id)
-                //TODO Change exception
-                .orElseThrow(() -> new RuntimeException("playerNotFound"));
+                .orElseThrow(() -> new EntityNotFoundException(Player.class));
     }
 
     public List<Player> getAll() {

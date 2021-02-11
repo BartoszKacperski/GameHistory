@@ -1,5 +1,6 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.model.entities.Round;
@@ -26,7 +27,7 @@ public class GameService {
 
     public Game getById(Long id) {
         return gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("game not found"));
+                .orElseThrow(() -> new EntityNotFoundException(Game.class));
     }
 
     public List<Game> getAll() {
