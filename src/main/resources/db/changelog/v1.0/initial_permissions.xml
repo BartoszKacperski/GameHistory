@@ -6,7 +6,7 @@
 
     <changeSet author="bartosz.kacperski" id="05-01-2021-1">
         <createTable tableName="roles">
-            <column name="id" type="bigint(20)" autoIncrement="true">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(100)"/>
@@ -27,10 +27,10 @@
 
     <changeSet author="bartosz.kacperski" id="05-01-2021-3">
         <createTable tableName="user_roles">
-            <column name="user_id" type="bigint(20)">
+            <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="role_id" type="bigint(20)">
+            <column name="role_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>

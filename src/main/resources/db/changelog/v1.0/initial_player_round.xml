@@ -6,14 +6,14 @@
 
     <changeSet author="bartosz.kacperski" id="25-01-2021-1">
         <createTable tableName="player_rounds">
-            <column name="id" type="BIGINT(20)" autoIncrement="true">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="point" type="DECIMAL(18,2)"/>
-            <column name="player_id" type="BIGINT(20)">
+            <column name="player_id" type="BIGINT">
                 <constraints references="players(id)" foreignKeyName="playerForeignKey"/>
             </column>
-            <column name="round_id" type="BIGINT(20)">
+            <column name="round_id" type="BIGINT">
                 <constraints references="rounds(id)" foreignKeyName="roundForeignKey"/>
             </column>
         </createTable>

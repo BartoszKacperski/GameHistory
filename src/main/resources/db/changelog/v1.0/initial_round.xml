@@ -6,10 +6,10 @@
 
     <changeSet author="bartosz.kacperski" id="25-01-2021-1">
         <createTable tableName="rounds">
-            <column name="id" type="BIGINT(20)" autoIncrement="true">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="game_id" type="BIGINT(20)">
+            <column name="game_id" type="BIGINT">
                 <constraints references="games(id)" foreignKeyName="gameForeignKey"/>
             </column>
         </createTable>
