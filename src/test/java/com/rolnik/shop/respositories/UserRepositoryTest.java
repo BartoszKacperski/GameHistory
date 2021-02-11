@@ -26,7 +26,7 @@ class UserRepositoryTest {
         //given
         User user = new User(
                 "login",
-                "email",
+                "email@email.pl",
                 "password",
                 Collections.emptySet()
         );

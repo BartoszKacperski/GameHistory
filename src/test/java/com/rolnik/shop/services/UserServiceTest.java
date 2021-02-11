@@ -1,5 +1,6 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.model.entities.Role;
 import com.rolnik.shop.model.entities.User;
 import com.rolnik.shop.respositories.RoleRepository;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
@@ -70,7 +72,7 @@ class UserServiceTest {
         //when
         Mockito.when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.empty());
         //then
-        Assert.assertThrows(RuntimeException.class, () -> userService.registerUser(user));
+        Assert.assertThrows(EntityNotFoundException.class, () -> userService.registerUser(user));
     }
 
     @Test
@@ -101,6 +103,6 @@ class UserServiceTest {
         //when
         Mockito.when(userRepository.findByUsername("username")).thenReturn(Optional.empty());
         //then
-        Assert.assertThrows(RuntimeException.class, () -> userService.loadUserByUsername("username"));
+        Assert.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("username"));
     }
 }

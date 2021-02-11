@@ -1,5 +1,6 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.model.entities.Player;
 import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.respositories.PlayerRoundRepository;
@@ -54,7 +55,7 @@ class PlayerRoundServiceTest {
         //given
         Mockito.when(playerRoundRepository.findById(1L)).thenReturn(Optional.empty());
         //then
-        Assert.assertThrows(RuntimeException.class, () -> playerRoundService.getById(1L));
+        Assert.assertThrows(EntityNotFoundException.class, () -> playerRoundService.getById(1L));
     }
 
     @Test
