@@ -86,6 +86,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 request
         );
 
+        logger.error("Test", ex);
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 }
