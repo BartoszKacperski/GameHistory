@@ -7,6 +7,7 @@ import com.rolnik.shop.respositories.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,7 +16,7 @@ import java.util.List;
 public class PlayerService {
     private final PlayerRepository playerRepository;
 
-    public Player create(Player player) {
+    public Player create(@Valid Player player) {
         return playerRepository.save(player);
     }
 
@@ -28,7 +29,7 @@ public class PlayerService {
         return playerRepository.findAll();
     }
 
-    public Player update(Player player) {
+    public Player update(@Valid Player player) {
         return playerRepository.save(player);
     }
 

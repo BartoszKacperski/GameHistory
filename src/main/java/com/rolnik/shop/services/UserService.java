@@ -7,12 +7,14 @@ import com.rolnik.shop.respositories.RoleRepository;
 import com.rolnik.shop.respositories.UserRepository;
 import com.rolnik.shop.security.UserAuthDetails;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User registerUser(User user) {
+    public User registerUser(@Valid User user) {
         String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         user.setPassword(encryptedPassword);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class GameService {
     private final RoundRepository roundRepository;
     private final EntityManager entityManager;
 
-    public Game create(Game game) {
+    public Game create(@Valid Game game) {
         return gameRepository.save(game);
     }
 
@@ -39,7 +40,7 @@ public class GameService {
     }
 
     @Transactional
-    public Round addRound(Long gameId, Round round) {
+    public Round addRound(Long gameId, @Valid Round round) {
         Game game = this.getById(gameId);
 
         for (PlayerRound playerRound : round.getPlayerRounds()) {

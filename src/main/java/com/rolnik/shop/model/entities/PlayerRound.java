@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "player_rounds")
 public class PlayerRound extends SimpleEntity {
+    @Digits(integer=18, fraction=2)
     private BigDecimal point;
     @ManyToOne
     @JoinColumn(name = "player_id")

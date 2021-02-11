@@ -19,4 +19,8 @@
         <renameColumn tableName="users" oldColumnName="login" newColumnName="username" columnDataType="VARCHAR(255)"/>
     </changeSet>
 
+    <changeSet author="bartosz.kacperski" id="11-02-2021-1">
+        <addUniqueConstraint tableName="users" columnNames="username, email"/>
+    </changeSet>
+
 </databaseChangeLog>
