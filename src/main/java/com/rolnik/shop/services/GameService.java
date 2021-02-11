@@ -8,6 +8,7 @@ import com.rolnik.shop.respositories.GameRepository;
 import com.rolnik.shop.respositories.RoundRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 
 @Service
+@Validated
 public class GameService {
     private final GameRepository gameRepository;
     private final RoundRepository roundRepository;

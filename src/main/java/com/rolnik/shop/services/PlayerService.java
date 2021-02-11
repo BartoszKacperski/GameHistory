@@ -6,6 +6,7 @@ import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.respositories.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 
 @Service
+@Validated
 public class PlayerService {
     private final PlayerRepository playerRepository;
 
