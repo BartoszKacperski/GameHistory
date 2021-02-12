@@ -18,4 +18,5 @@ public class GameDetailsResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
     private List<Round> rounds;
+    private boolean finished;
 }

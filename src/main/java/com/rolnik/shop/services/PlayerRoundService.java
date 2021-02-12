@@ -1,6 +1,7 @@
 package com.rolnik.shop.services;
 
 import com.rolnik.shop.exceptions.EntityNotFoundException;
+import com.rolnik.shop.exceptions.FinishedGameUpdateException;
 import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.respositories.PlayerRoundRepository;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,10 @@ public class PlayerRoundService {
     @Transactional
     public PlayerRound updatePoint(Long id, @Digits(integer=18, fraction=2) BigDecimal point) {
         PlayerRound playerRound = getById(id);
+
+        if (playerRound.getRound().getGame().isFinished()) {
+            throw new FinishedGameUpdateException();
+        }
 
         playerRound.setPoint(point);
 

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,8 +49,18 @@ public class GameController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public List<GameShortDetails> getAll() {
         return mapGamesShortDetailsResponse(gameService.getAll());
+    }
+
+    @GetMapping(
+            value = "/finished",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<GameShortDetails> getAllFinished() {
+        return mapGamesShortDetailsResponse(gameService.getAllFinished());
     }
 
     @DeleteMapping(
@@ -58,6 +69,15 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Long id) {
         gameService.delete(id);
+    }
+
+    @PutMapping(
+            value = "/{id}/finish",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public GameShortDetails finish(@PathVariable Long id) {
+        return mapGameShortDetailsResponse(gameService.finishGame(id));
     }
 
     @PutMapping(

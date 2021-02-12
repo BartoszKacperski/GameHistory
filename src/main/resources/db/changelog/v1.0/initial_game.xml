@@ -12,5 +12,10 @@
             <column name="date" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
+    <changeSet author="bartosz.kacperski" id="12.012.2021-1">
+        <addColumn tableName="games">
+            <column name="finished" type="BOOLEAN" defaultValue="FALSE"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

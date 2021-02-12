@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.rolnik.shop.BaseTest;
 import com.rolnik.shop.config.BCryptPasswordEncoderConfig;
 import com.rolnik.shop.config.SecurityTestConfig;
 import com.rolnik.shop.security.JWTConfig;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest
 @ContextConfiguration(classes = {SecurityTestConfig.class, BCryptPasswordEncoderConfig.class, SecurityConfig.class, JWTConfig.class, ModelMapper.class})
-public class BaseControllerTest {
+public class BaseControllerTest extends BaseTest {
     @MockBean(name = "userService")
     protected UserService userService;
     @Autowired

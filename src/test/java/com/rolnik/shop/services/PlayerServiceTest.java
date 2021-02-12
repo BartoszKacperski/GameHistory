@@ -1,5 +1,6 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.BaseTest;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.model.entities.Player;
 import com.rolnik.shop.respositories.PlayerRepository;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-class PlayerServiceTest {
+class PlayerServiceTest extends BaseTest {
     @Mock
     private PlayerRepository playerRepository;
 
@@ -25,7 +26,7 @@ class PlayerServiceTest {
     @Test
     void whenPlayerValid_thenCreateAndReturnPlayer() {
         //when
-        Player player = new Player("nickname");
+        Player player = super.createPlayer("nickname");
         //given
         Mockito.when(playerRepository.save(player)).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         //then
@@ -37,7 +38,7 @@ class PlayerServiceTest {
     @Test
     void whenIdValid_thenReturnPlayer() {
         //when
-        Player player = new Player("nickname");
+        Player player = super.createPlayer("nickname");
         //given
         Mockito.when(playerRepository.findById(1L)).thenReturn(Optional.of(player));
         //then
@@ -50,7 +51,7 @@ class PlayerServiceTest {
     @Test
     void whenIdNotValid_thenThrowException() {
         //when
-        Player player = new Player("nickname");
+        Player player = super.createPlayer("nickname");
         //given
         Mockito.when(playerRepository.findById(1L)).thenReturn(Optional.empty());
         //then
@@ -60,9 +61,9 @@ class PlayerServiceTest {
     @Test
     void whenPlayersExist_thenReturnAll() {
         //when
-        Player firstPlayer = new Player("first");
-        Player secondPlayer = new Player("second");
-        Player thirdPlayer = new Player("third");
+        Player firstPlayer = super.createPlayer("first");
+        Player secondPlayer = super.createPlayer("second");
+        Player thirdPlayer = super.createPlayer("third");
         //given
         Mockito.when(playerRepository.findAll()).thenReturn(List.of(firstPlayer, secondPlayer, thirdPlayer));
         //then
@@ -78,7 +79,7 @@ class PlayerServiceTest {
     @Test
     void whenPlayerValidUpdate_thenUpdateAndReturnUser() {
         //when
-        Player player = new Player("nickname");
+        Player player = super.createPlayer("nickname");
         //given
         Mockito.when(playerRepository.save(player)).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         //then

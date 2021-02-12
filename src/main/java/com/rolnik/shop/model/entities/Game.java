@@ -23,6 +23,7 @@ public class Game extends SimpleEntity {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Round> rounds;
+    private boolean finished = false;
 
     public void addRound(Round round) {
         rounds.add(round);

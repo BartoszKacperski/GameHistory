@@ -1,12 +1,15 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.BaseTest;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
+import com.rolnik.shop.exceptions.FinishedGameUpdateException;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.Player;
 import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.model.entities.Round;
 import com.rolnik.shop.respositories.GameRepository;
 import com.rolnik.shop.respositories.RoundRepository;
+import org.checkerframework.checker.nullness.Opt;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-class GameServiceTest {
+class GameServiceTest extends BaseTest {
     @Mock
     private GameRepository gameRepository;
 
@@ -36,7 +39,7 @@ class GameServiceTest {
     void whenGameValid_thenCreateAndReturnGame() {
         //when
         LocalDateTime now = LocalDateTime.now();
-        Game game = new Game(now, List.of());
+        Game game = super.createGame(now, false);
         //given
         Mockito.when(gameRepository.save(game)).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         //then
@@ -50,7 +53,7 @@ class GameServiceTest {
     void whenIdValid_thenReturnGame() {
         //when
         LocalDateTime now = LocalDateTime.now();
-        Game game = new Game(now, List.of());
+        Game game = super.createGame(now, false);
         //given
         Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
         //then
@@ -65,7 +68,7 @@ class GameServiceTest {
     void whenIdNotValid_thenThrowException() {
         //when
         LocalDateTime now = LocalDateTime.now();
-        Game game = new Game(now, List.of());
+        Game game = super.createGame(now, false);
         //given
         Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.empty());
         //then
@@ -76,11 +79,11 @@ class GameServiceTest {
     void whenPlayersExist_thenReturnAll() {
         //when
         LocalDateTime now1 = LocalDateTime.now();
-        Game firstGame = new Game(now1, List.of());
+        Game firstGame = super.createGame(now1, false);
         LocalDateTime now2 = LocalDateTime.now();
-        Game secondGame = new Game(now2, List.of());
+        Game secondGame = super.createGame(now2, false);;
         LocalDateTime now3 = LocalDateTime.now();
-        Game thirdGame = new Game(now3, List.of());
+        Game thirdGame = super.createGame(now3, false);
         //given
         Mockito.when(gameRepository.findAll()).thenReturn(List.of(firstGame, secondGame, thirdGame));
         //then
@@ -93,27 +96,18 @@ class GameServiceTest {
         Assert.assertEquals(now3, foundGames.get(2).getDate());
     }
 
+
     @Test
     void whenRoundValid_thenAddRoundToGame() {
         //when
-        Player firstPlayer = new Player("firstPlayer");
-        Player secondPlayer = new Player("secondPlayer");
-        Game game = new Game(LocalDateTime.now(), new ArrayList<>());
-        Round round = new Round(
-                game,
-                List.of(
-                        new PlayerRound(
-                            BigDecimal.TEN,
-                            firstPlayer,
-                            null
-                        ),
-                        new PlayerRound(
-                                BigDecimal.ONE,
-                                secondPlayer,
-                                null
-                        )
-                )
+        Player firstPlayer = super.createPlayer("firstPlayer");
+        Player secondPlayer = super.createPlayer("secondPlayer");
+        Round round = super.createRound(
+                super.createPlayerRound(firstPlayer, BigDecimal.TEN),
+                super.createPlayerRound(secondPlayer, BigDecimal.ONE)
         );
+        Game game = super.createGame(LocalDateTime.now(), false, round);
+
         //given
         Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
         Mockito.when(roundRepository.saveAndFlush(Mockito.any(Round.class))).thenAnswer(a -> a.getArgument(0));
@@ -130,5 +124,33 @@ class GameServiceTest {
         Assert.assertEquals("secondPlayer", second.getPlayer().getNickname());
         Assert.assertEquals(BigDecimal.TEN, first.getPoint());
         Assert.assertEquals(BigDecimal.ONE, second.getPoint());
+    }
+
+    @Test
+    void whenRoundValidButGameFinished_thenThenThrowFinishedGameUpdateException() {
+        //when
+        Player firstPlayer = super.createPlayer("firstPlayer");
+        Player secondPlayer = super.createPlayer("secondPlayer");
+        Round round = super.createRound(
+                super.createPlayerRound(firstPlayer, BigDecimal.TEN),
+                super.createPlayerRound(secondPlayer, BigDecimal.ONE)
+        );
+        Game game = super.createGame(LocalDateTime.now(), true, round);
+        //given
+        Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+        //then
+        Assert.assertThrows(FinishedGameUpdateException.class, () -> gameService.addRound(1L, round));
+    }
+
+    @Test
+    public void whenGameFinish_ThenGameFinished() {
+        //when
+        Game game = createGame(LocalDateTime.now(), false);
+        //given
+        Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+        //then
+        Game updatedGame = gameService.finishGame(1L);
+
+        Assert.assertTrue(updatedGame.isFinished());
     }
 }

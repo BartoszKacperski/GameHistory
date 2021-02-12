@@ -1,9 +1,11 @@
 package com.rolnik.shop.errorhandling;
 
 import com.rolnik.shop.exceptions.EntityNotFoundException;
+import com.rolnik.shop.exceptions.FinishedGameUpdateException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -43,6 +45,30 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 new EntityNotFoundErrorInfo(
                         ex.getClazz().getSimpleName()
                 ),
+                request
+        );
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler({ FinishedGameUpdateException.class })
+    public ResponseEntity<Object> handleFinishedGameUpdateException(final FinishedGameUpdateException ex, final WebRequest request) {
+        final ApiError apiError = new ApiError(
+                HttpStatus.BAD_REQUEST,
+                "finishedGameUpdateNotAllowed",
+                null,
+                request
+        );
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler({ AccessDeniedException.class })
+    public ResponseEntity<Object> handleAccessDeniedException(final AccessDeniedException ex, final WebRequest request) {
+        final ApiError apiError = new ApiError(
+                HttpStatus.FORBIDDEN,
+                "accessDenied",
+                null,
                 request
         );
 

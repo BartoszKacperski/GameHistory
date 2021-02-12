@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
@@ -78,14 +79,15 @@ class GameControllerTest extends BaseControllerTest {
     void whenGetByIdValid_thenReturnGameDetailResponseJson() throws Exception {
         //given
         LocalDateTime gameDate = LocalDateTime.now();
-        Game game = createGame(
+        Game game = super.createGame(
                 gameDate,
-                createRound(
-                        createPlayerRound(
+                false,
+                super.createRound(
+                        super.createPlayerRound(
                                 createPlayer("firstPlayer"),
                                 BigDecimal.TEN
                         ),
-                        createPlayerRound(
+                        super.createPlayerRound(
                                 createPlayer("secondPlayer"),
                                 BigDecimal.ONE
                         )
@@ -98,6 +100,7 @@ class GameControllerTest extends BaseControllerTest {
                 .header("Authorization", super.getUserAuthToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.date", is(formatter.format(gameDate))))
+                .andExpect(jsonPath("$.finished", is(false)))
                 .andExpect(jsonPath("$.rounds", hasSize(1)))
                 .andExpect(jsonPath("$.rounds[0].playerRounds", hasSize(2)))
                 .andExpect(jsonPath("$.rounds[0].playerRounds[0].player.nickname", is("firstPlayer")))
@@ -120,22 +123,35 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
-    void whenListValid_thenReturnGameDetailResponseJson() throws Exception {
+    void whenListByAdmin_thenReturnGameDetailResponseJson() throws Exception {
         //given
         LocalDateTime firstGameDate = LocalDateTime.now();
-        Game firstGame = new Game(firstGameDate, new ArrayList<>());
+        Game firstGame = super.createGame(firstGameDate, true);;
 
         LocalDateTime secondGameDate = LocalDateTime.now();
-        Game secondGame = new Game(secondGameDate, new ArrayList<>());
+        Game secondGame = super.createGame(secondGameDate, false);
         //when
         Mockito.when(gameService.getAll()).thenReturn(List.of(firstGame, secondGame));
         //then
         mvc.perform(get("/games")
-                .header("Authorization", super.getUserAuthToken()))
+                .header("Authorization", super.getAdminAuthToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].date", is(formatter.format(firstGameDate))))
-                .andExpect(jsonPath("$[1].date", is(formatter.format(secondGameDate)))
+                .andExpect(jsonPath("$[1].date", is(formatter.format(firstGameDate)))
+                );
+    }
+
+    @Test
+    void whenListByUser_thenStatusForbidden() throws Exception {
+        //given
+        Game game = new Game();
+        //when
+        Mockito.when(gameService.getAll()).thenReturn(List.of(game));
+        //then
+        mvc.perform(get("/games")
+                .header("Authorization", super.getUserAuthToken()))
+                .andExpect(status().isForbidden()
                 );
     }
 
@@ -150,6 +166,65 @@ class GameControllerTest extends BaseControllerTest {
                 .andExpect(status().isForbidden()
                 );
     }
+
+    @Test
+    void whenListFinishedValid_thenReturnGameDetailResponseJson() throws Exception {
+        //given
+        LocalDateTime firstGameDate = LocalDateTime.now();
+        Game firstGame = super.createGame(firstGameDate, true);;
+
+        LocalDateTime secondGameDate = LocalDateTime.now();
+        Game secondGame = super.createGame(secondGameDate, true);;
+        //when
+        Mockito.when(gameService.getAllFinished()).thenReturn(List.of(firstGame, secondGame));
+        //then
+        mvc.perform(get("/games/finished")
+                .header("Authorization", super.getUserAuthToken()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].date", is(formatter.format(firstGameDate))))
+                .andExpect(jsonPath("$[1].date", is(formatter.format(firstGameDate)))
+                );
+    }
+
+    @Test
+    void whenListFinishedByUser_thenStatusForbidden() throws Exception {
+        //given
+        Game game = new Game();
+        //when
+        Mockito.when(gameService.getAll()).thenReturn(List.of(game));
+        //then
+        mvc.perform(get("/games/finished")
+                .header("Authorization", super.getUserAuthToken()))
+                .andExpect(status().isOk()
+                );
+    }
+
+    @Test
+    void whenFinishValid_thenStatusOk() throws Exception {
+        //given
+        LocalDateTime now = LocalDateTime.now();
+        Game game = super.createGame(now, false);
+        //when
+        Mockito.when(gameService.finishGame(1L)).thenReturn(game);
+        //then
+        mvc.perform(put("/games/1/finish")
+                .header("Authorization", super.getUserAuthToken()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.date", is(formatter.format(now)))
+                );
+    }
+
+    @Test
+    void whenFinishValid_thenStatusForbidden() throws Exception {
+        //given
+        //when
+        //then
+        mvc.perform(get("/games/1/finish"))
+                .andExpect(status().isForbidden()
+                );
+    }
+
 
     @Test
     void whenDeleteValid_thenReturnPlayerResponseJson() throws Exception {
@@ -177,11 +252,11 @@ class GameControllerTest extends BaseControllerTest {
         //given
         RoundAddRequest roundAddRequest = new RoundAddRequest(
                 List.of(
-                        createPlayerRound(
+                        super.createPlayerRound(
                                 createPlayer("firstPlayer"),
                                 BigDecimal.TEN
                         ),
-                        createPlayerRound(
+                        super.createPlayerRound(
                                 createPlayer("secondPlayer"),
                                 BigDecimal.ONE
                         )
@@ -211,33 +286,5 @@ class GameControllerTest extends BaseControllerTest {
                 );
     }
 
-    private Game createGame(LocalDateTime gameDate,
-                            Round... rounds) {
-        Game game = new Game(gameDate, new ArrayList<>());
 
-        for (Round round : rounds) {
-            game.addRound(round);
-        }
-
-        return game;
-    }
-
-    private Player createPlayer(String nickname) {
-        return new Player(nickname);
-    }
-
-    private PlayerRound createPlayerRound(Player player, BigDecimal points) {
-        return new PlayerRound(
-                points,
-                player,
-                null
-        );
-    }
-
-    private Round createRound(PlayerRound... playerRounds) {
-        return new Round(
-                null,
-                List.of(playerRounds)
-        );
-    }
 }

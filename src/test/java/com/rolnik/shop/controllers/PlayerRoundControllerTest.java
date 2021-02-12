@@ -30,11 +30,10 @@ class PlayerRoundControllerTest extends BaseControllerTest {
     void whenUpdatePointAuthorized_thenReturnPlayerRoundShortDetailsResponseJson() throws Exception {
         //given
         BigDecimal newPointValue = BigDecimal.valueOf(250);
-        Player player = new Player("nickname");
-        PlayerRound playerRound = new PlayerRound(
-                newPointValue,
+        Player player = super.createPlayer("nickname");
+        PlayerRound playerRound = super.createPlayerRound(
                 player,
-                null
+                newPointValue
         );
         //when
         Mockito.when(playerRoundService.updatePoint(1L, newPointValue)).thenReturn(playerRound);

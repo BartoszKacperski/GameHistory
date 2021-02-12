@@ -24,4 +24,9 @@ public class Round extends SimpleEntity {
     @OneToMany(mappedBy = "round", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<PlayerRound> playerRounds;
+
+    public void addPlayerRound(PlayerRound playerRound) {
+        playerRounds.add(playerRound);
+        playerRound.setRound(this);
+    }
 }

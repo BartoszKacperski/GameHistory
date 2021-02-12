@@ -63,7 +63,7 @@ class PlayerControllerTest extends BaseControllerTest {
     @Test
     void whenGetByIdValid_thenReturnPlayerResponseJson() throws Exception {
         //given
-        Player player = new Player(
+        Player player = super.createPlayer(
                 "nickname"
         );
         //when
@@ -79,7 +79,7 @@ class PlayerControllerTest extends BaseControllerTest {
     @Test
     void whenGetByIdNotAuthorized_thenStatusForbidden() throws Exception {
         //given
-        Player player = new Player(
+        Player player = super.createPlayer(
                 "nickname"
         );
         //when
@@ -93,10 +93,10 @@ class PlayerControllerTest extends BaseControllerTest {
     @Test
     void whenListValid_thenReturnPlayerResponseJson() throws Exception {
         //given
-        Player firstPlayer = new Player(
+        Player firstPlayer = super.createPlayer(
                 "firstPlayer"
         );
-        Player secondPlayer = new Player(
+        Player secondPlayer = super.createPlayer(
                 "secondPlayer"
         );
         //when
@@ -114,10 +114,10 @@ class PlayerControllerTest extends BaseControllerTest {
     @Test
     void whenListNotAuthorized_thenStatusForbidden() throws Exception {
         //given
-        Player firstPlayer = new Player(
+        Player firstPlayer = super.createPlayer(
                 "firstPlayer"
         );
-        Player secondPlayer = new Player(
+        Player secondPlayer = super.createPlayer(
                 "secondPlayer"
         );
         //when
