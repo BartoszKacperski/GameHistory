@@ -2,6 +2,7 @@ package com.rolnik.shop.services;
 
 import com.rolnik.shop.BaseTest;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
+import com.rolnik.shop.exceptions.UserCredentialsAlreadyInUseException;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.Role;
 import com.rolnik.shop.model.entities.User;
@@ -60,6 +61,37 @@ class UserServiceTest extends BaseTest {
         assertEquals(1, registeredUser.getRoles().size());
         assertEquals("ROLE_USER", registeredUser.getRoles().iterator().next().getName());
         assertEquals("test_encoded", registeredUser.getPassword());
+    }
+
+    @Test
+    public void whenUserRegisterDuplicatedUsername_thenThrowUserCredentialsAlreadyInUseException() {
+        //given
+        User user = super.createBasicUser(
+                "username",
+                "test@test.pl",
+                "test"
+        );
+        //when
+        Mockito.when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
+        //then
+        Throwable exception = Assert.assertThrows(UserCredentialsAlreadyInUseException.class, () -> userService.registerUser(user));
+        Assert.assertEquals("username", exception.getMessage());
+    }
+
+    @Test
+    public void whenUserRegisterDuplicatedEmail_thenThrowUserCredentialsAlreadyInUseException() {
+        //given
+        User user = super.createBasicUser(
+                "username",
+                "test@test.pl",
+                "test"
+        );
+        //when
+        Mockito.when(userRepository.findByUsername("username")).thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByEmail("test@test.pl")).thenReturn(Optional.of(user));
+        //then
+        Throwable exception = Assert.assertThrows(UserCredentialsAlreadyInUseException.class, () -> userService.registerUser(user));
+        Assert.assertEquals("email", exception.getMessage());
     }
 
     @Test

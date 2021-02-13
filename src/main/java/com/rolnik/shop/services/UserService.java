@@ -1,6 +1,7 @@
 package com.rolnik.shop.services;
 
 import com.rolnik.shop.exceptions.EntityNotFoundException;
+import com.rolnik.shop.exceptions.UserCredentialsAlreadyInUseException;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.Role;
 import com.rolnik.shop.model.entities.User;
@@ -46,6 +47,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User registerUser(@Valid User user) {
+        checkUserCredentialsInUse(user);
         String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         user.setPassword(encryptedPassword);
@@ -76,5 +78,14 @@ public class UserService implements UserDetailsService {
         }
 
         return 1L;
+    }
+
+    private void checkUserCredentialsInUse(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UserCredentialsAlreadyInUseException("username");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new UserCredentialsAlreadyInUseException("email");
+        }
     }
 }

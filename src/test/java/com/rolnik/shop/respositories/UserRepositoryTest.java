@@ -88,4 +88,37 @@ class UserRepositoryTest extends BaseTest {
 
         assertNull(foundUser);
     }
+
+    @Test
+    void whenFindByEmail_ThenReturnUser() {
+        User user = super.createBasicUser(
+                "login",
+                "email@email.pl",
+                "password"
+        );
+
+        entityManager.persist(user);
+        entityManager.flush();
+
+        User foundUser = userRepository.findByEmail("email@email.pl").orElse(null);
+
+        assertNotNull(foundUser);
+        assertEquals(foundUser.getUsername(), user.getUsername());
+    }
+
+    @Test
+    void whenFindByEmail_ThenReturnNull() {
+        User user = super.createBasicUser(
+                "login",
+                "email@email.pl",
+                "password"
+        );
+
+        entityManager.persist(user);
+        entityManager.flush();
+
+        User foundUser = userRepository.findByEmail("emai1@email.pl").orElse(null);
+
+        assertNull(foundUser);
+    }
 }
