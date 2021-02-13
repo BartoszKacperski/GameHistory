@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 @SpringBootTest
-public class ServiceValidationTest {
+public class ServiceValidationTest extends BaseTest{
     @Autowired
     private UserService userService;
 
@@ -29,11 +29,10 @@ public class ServiceValidationTest {
 
     @Test
     public void whenUserUsernameInvalidBelowMinSizeOnRegister_ThrowConstrainViolationException() {
-        User user = new User(
+        User user = super.createBasicUser(
                 "u",
                 "email@email.pl",
-                "password",
-                Set.of()
+                "password"
         );
 
         ConstraintViolationException constraintViolationException = Assert.assertThrows(ConstraintViolationException.class, () -> userService.registerUser(user));
@@ -44,11 +43,10 @@ public class ServiceValidationTest {
 
     @Test
     public void whenUserUsernameInvalidAboveMaxSizeOnRegister_ThrowConstrainViolationException() {
-        User user = new User(
+        User user = super.createBasicUser(
                 StringUtils.repeat("1", 300),
                 "email@email.pl",
-                "password",
-                Set.of()
+                "password"
         );
 
         ConstraintViolationException constraintViolationException = Assert.assertThrows(ConstraintViolationException.class, () -> userService.registerUser(user));
@@ -59,11 +57,10 @@ public class ServiceValidationTest {
 
     @Test
     public void whenUserEmailInvalidOnRegister_ThrowConstrainViolationException() {
-        User user = new User(
+        User user = super.createBasicUser(
                 "username",
                 "em",
-                "password",
-                Set.of()
+                "password"
         );
 
         ConstraintViolationException constraintViolationException = Assert.assertThrows(ConstraintViolationException.class, () -> userService.registerUser(user));
@@ -74,11 +71,10 @@ public class ServiceValidationTest {
 
     @Test
     public void whenUserPasswordInvalidBelowMinSizeOnRegister_ThrowConstrainViolationException() {
-        User user = new User(
+        User user = super.createBasicUser(
                 "username",
                 "email@email.pl",
-                "1",
-                Set.of()
+                "1"
         );
 
         ConstraintViolationException constraintViolationException = Assert.assertThrows(ConstraintViolationException.class, () -> userService.registerUser(user));
@@ -89,11 +85,10 @@ public class ServiceValidationTest {
 
     @Test
     public void whenUserPasswordInvalidAboveMaxSizeOnRegister_ThrowConstrainViolationException() {
-        User user = new User(
+        User user = super.createBasicUser(
                 "username",
                 "email@email.pl",
-                StringUtils.repeat("1", 300),
-                Set.of()
+                StringUtils.repeat("1", 300)
         );
 
         ConstraintViolationException constraintViolationException = Assert.assertThrows(ConstraintViolationException.class, () -> userService.registerUser(user));
@@ -104,7 +99,7 @@ public class ServiceValidationTest {
 
     @Test
     public void whenPlayerNicknameInvalidBelowMinSizeOnCreate_ThrowConstrainViolationException() {
-        Player player = new Player(
+        Player player = super.createPlayer(
                 "12"
         );
 
@@ -116,7 +111,7 @@ public class ServiceValidationTest {
 
     @Test
     public void whenPlayerNicknameInvalidAboveMaxSizeOnCreate_ThrowConstrainViolationException() {
-        Player player = new Player(
+        Player player = super.createPlayer(
                 StringUtils.repeat("1", 300)
         );
 

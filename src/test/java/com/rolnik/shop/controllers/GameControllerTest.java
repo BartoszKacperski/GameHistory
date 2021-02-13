@@ -1,11 +1,8 @@
 package com.rolnik.shop.controllers;
 
 import com.rolnik.shop.dtos.game.GameCreateRequest;
-import com.rolnik.shop.dtos.player.PlayerCreateRequest;
 import com.rolnik.shop.dtos.round.RoundAddRequest;
 import com.rolnik.shop.model.entities.Game;
-import com.rolnik.shop.model.entities.Player;
-import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.model.entities.Round;
 import com.rolnik.shop.services.GameService;
 import org.junit.jupiter.api.Test;
@@ -18,15 +15,10 @@ import org.springframework.http.MediaType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -49,7 +41,7 @@ class GameControllerTest extends BaseControllerTest {
                 gameDate
         );
         //when
-        Mockito.when(gameService.create(Mockito.any())).thenAnswer(answer -> answer.getArgument(0));
+        Mockito.when(gameService.create(Mockito.any(), Mockito.anyLong())).thenAnswer(answer -> answer.getArgument(0));
         //then
         mvc.perform(post("/games")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -67,7 +59,7 @@ class GameControllerTest extends BaseControllerTest {
                 LocalDateTime.now()
         );
         //when
-        Mockito.when(gameService.create(Mockito.any())).thenAnswer(answer -> answer.getArgument(0));
+        Mockito.when(gameService.create(Mockito.any(), Mockito.anyLong())).thenAnswer(answer -> answer.getArgument(0));
         //then
         mvc.perform(post("/games")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -286,5 +278,39 @@ class GameControllerTest extends BaseControllerTest {
                 );
     }
 
+    @Test
+    void whenGetCurrentGameValid_thenReturnCurrentGameDetailsResponseJson() throws Exception {
+        //given
+        LocalDateTime gameDate = LocalDateTime.now();
+        Game game = super.createGame(
+                gameDate,
+                false,
+                super.createRound(
+                        super.createPlayerRound(
+                                createPlayer("firstPlayer"),
+                                BigDecimal.TEN
+                        ),
+                        super.createPlayerRound(
+                                createPlayer("secondPlayer"),
+                                BigDecimal.ONE
+                        )
+                )
+        );
+        //when
+        Mockito.when(userService.getCurrentGame(Mockito.anyLong())).thenReturn(game);
+        //then
+        mvc.perform(get("/games/currentGame")
+                .header("Authorization", super.getUserAuthToken()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.date", is(formatter.format(gameDate))))
+                .andExpect(jsonPath("$.finished", is(false)))
+                .andExpect(jsonPath("$.rounds", hasSize(1)))
+                .andExpect(jsonPath("$.rounds[0].playerRounds", hasSize(2)))
+                .andExpect(jsonPath("$.rounds[0].playerRounds[0].player.nickname", is("firstPlayer")))
+                .andExpect(jsonPath("$.rounds[0].playerRounds[1].player.nickname", is("secondPlayer")))
+                .andExpect(jsonPath("$.rounds[0].playerRounds[0].point", is(10)))
+                .andExpect(jsonPath("$.rounds[0].playerRounds[1].point", is(1))
+                );
+    }
 
 }

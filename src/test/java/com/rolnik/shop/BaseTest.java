@@ -1,21 +1,25 @@
 package com.rolnik.shop;
 
-import com.rolnik.shop.model.entities.Game;
-import com.rolnik.shop.model.entities.Player;
-import com.rolnik.shop.model.entities.PlayerRound;
-import com.rolnik.shop.model.entities.Round;
+import com.rolnik.shop.model.entities.*;
+import org.assertj.core.util.Sets;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class BaseTest {
 
     protected Game createGame(LocalDateTime gameDate,
-                            boolean finished,
-                            Round... rounds) {
-        Game game = new Game(gameDate, new ArrayList<>(), finished);
+                              boolean finished,
+                              Round... rounds) {
+        return createGame(gameDate, finished, null, rounds);
+    }
+
+    protected Game createGame(LocalDateTime gameDate,
+                              boolean finished,
+                              User user,
+                              Round... rounds) {
+        Game game = new Game(gameDate, new ArrayList<>(), finished, user);
 
         for (Round round : rounds) {
             game.addRound(round);
@@ -44,5 +48,15 @@ public class BaseTest {
         }
 
         return round;
+    }
+
+    protected User createBasicUser(String username, String email, String password) {
+        return new User(
+                username,
+                email,
+                password,
+                null,
+                Sets.newHashSet()
+        );
     }
 }

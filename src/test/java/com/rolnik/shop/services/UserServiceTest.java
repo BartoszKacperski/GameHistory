@@ -1,6 +1,8 @@
 package com.rolnik.shop.services;
 
+import com.rolnik.shop.BaseTest;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
+import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.Role;
 import com.rolnik.shop.model.entities.User;
 import com.rolnik.shop.respositories.RoleRepository;
@@ -17,13 +19,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceTest extends BaseTest {
     @Mock
     private UserRepository userRepository;
 
@@ -40,11 +43,10 @@ class UserServiceTest {
     @Test
     public void whenUserRegister_thenOnlyRoleUserAndEncodedPassword() {
         //given
-        User user = new User(
+        User user = super.createBasicUser(
                 "username",
                 "test@test.pl",
-                "test",
-                Sets.newHashSet()
+                "test"
         );
         //when
         Mockito.when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(new Role("ROLE_USER", "DESCRIPTION")));
@@ -63,11 +65,10 @@ class UserServiceTest {
     @Test
     public void whenRoleUserNotFound_thenThrowException() {
         //given
-        User user = new User(
+        User user = super.createBasicUser(
                 "username",
                 "test@test.pl",
-                "test",
-                Sets.newHashSet()
+                "test"
         );
         //when
         Mockito.when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.empty());
@@ -77,11 +78,10 @@ class UserServiceTest {
 
     @Test
     public void whenUsernameValid_thenReturnUser() {
-        User user = new User(
+        User user = super.createBasicUser(
                 "username",
                 "test@test.pl",
-                "test",
-                Sets.newHashSet()
+                "test"
         );
         //when
         Mockito.when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
@@ -94,15 +94,101 @@ class UserServiceTest {
 
     @Test
     public void whenUsernameNotValid_thenThrowException() {
-        User user = new User(
+        //given
+        User user = super.createBasicUser(
                 "username",
                 "test@test.pl",
-                "test",
-                Sets.newHashSet()
+                "test"
         );
         //when
         Mockito.when(userRepository.findByUsername("username")).thenReturn(Optional.empty());
         //then
         Assert.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("username"));
+    }
+
+    @Test
+    public void whenGetCurrentGame_thenReturnUserCurrentGame() {
+        //given
+        User user = super.createBasicUser(
+                "username",
+                "test@test.pl",
+                "test"
+        );
+        LocalDateTime now = LocalDateTime.now();
+        Game game = super.createGame(
+                now,
+                false
+        );
+
+        user.setCurrentGame(game);
+        //when
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        //then
+        Game foundGame = userService.getCurrentGame(1L);
+
+        Assert.assertEquals(now, foundGame.getDate());
+        Assert.assertEquals(user, foundGame.getUser());
+        Assert.assertFalse(game.isFinished());
+    }
+
+    @Test
+    public void whenGetCurrentGame_thenReturnNull() {
+        //given
+        User user = super.createBasicUser(
+                "username",
+                "test@test.pl",
+                "test"
+        );
+        //when
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        //then
+        Game foundGame = userService.getCurrentGame(1L);
+
+        Assert.assertNull(foundGame);
+    }
+
+    @Test
+    public void whenGetCurrentGame_thenThrowEntityNotFoundException() {
+        //given
+        User user = super.createBasicUser(
+                "username",
+                "test@test.pl",
+                "test"
+        );
+        LocalDateTime now = LocalDateTime.now();
+        Game game = super.createGame(
+                now,
+                false
+        );
+
+        user.setCurrentGame(game);
+        //when
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        //then
+        Assert.assertThrows(EntityNotFoundException.class, () -> userService.getCurrentGame(1L));
+    }
+
+    @Test
+    public void whenResetCurrentGame_thenUserGameNull() {
+        //given
+        User user = super.createBasicUser(
+                "username",
+                "test@test.pl",
+                "test"
+        );
+        LocalDateTime now = LocalDateTime.now();
+        Game game = super.createGame(
+                now,
+                false
+        );
+
+        user.setCurrentGame(game);
+        //when
+        Mockito.when(userRepository.findByCurrentGame(game)).thenReturn(Optional.of(user));
+        //then
+        userService.resetUserCurrentGame(game);
+
+        Assert.assertNull(user.getCurrentGame());
+        Assert.assertNull(game.getUser());
     }
 }

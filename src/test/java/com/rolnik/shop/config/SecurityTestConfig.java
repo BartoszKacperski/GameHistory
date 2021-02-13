@@ -25,12 +25,14 @@ public class SecurityTestConfig {
                         "user",
                         "user@email.pl",
                         bCryptPasswordEncoder.encode("password"),
+                        null,
                         Set.of(new Role("ROLE_USER", ""))
                 ),
                 new User(
                         "admin",
                         "admin@email.pl",
                         bCryptPasswordEncoder.encode("password"),
+                        null,
                         Set.of(
                                 new Role("ROLE_USER", ""),
                                 new Role("ROLE_ADMIN", "")

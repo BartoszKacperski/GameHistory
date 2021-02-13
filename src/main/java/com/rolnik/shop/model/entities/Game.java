@@ -24,6 +24,8 @@ public class Game extends SimpleEntity {
     @JsonManagedReference
     private List<Round> rounds;
     private boolean finished = false;
+    @OneToOne(mappedBy = "currentGame")
+    private User user;
 
     public void addRound(Round round) {
         rounds.add(round);

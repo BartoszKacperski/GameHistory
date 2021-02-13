@@ -22,11 +22,10 @@ class RegistrationControllerTest extends BaseControllerTest {
     @Test
     void whenRegisterUser_thenReturnUserJson() throws Exception {
         //given
-        User user = new User(
+        User user = super.createBasicUser(
                 "username",
                 "test@test.pl",
-                "test",
-                Sets.newHashSet()
+                "test"
         );
         UserCreateRequest userCreateRequest = new UserCreateRequest(
                 user.getUsername(),

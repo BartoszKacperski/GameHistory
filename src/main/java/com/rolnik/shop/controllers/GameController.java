@@ -9,13 +9,16 @@ import com.rolnik.shop.dtos.round.RoundAddResponse;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.Round;
 import com.rolnik.shop.services.GameService;
+import com.rolnik.shop.services.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,14 +29,20 @@ import java.util.stream.Collectors;
 public class GameController {
     private final GameService gameService;
     private final ModelMapper modelMapper;
+    private final UserService userService;
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public GameCreateResponse create(@RequestBody GameCreateRequest gameCreateRequest) {
-        return mapGame(gameService.create(mapGame(gameCreateRequest)));
+    public GameCreateResponse create(@RequestBody GameCreateRequest gameCreateRequest, Authentication authentication) {
+        return mapGame(
+                gameService.create(
+                        mapGame(gameCreateRequest),
+                        userService.getCurrentUserId(authentication)
+                )
+        );
     }
 
     @GetMapping(
@@ -89,6 +98,21 @@ public class GameController {
     public RoundAddResponse addRound(@PathVariable Long id, @RequestBody RoundAddRequest roundAddRequest) {
         return mapRound(gameService.addRound(id, mapRound(roundAddRequest)));
     }
+
+    @GetMapping(
+            value = "currentGame",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public GameDetailsResponse getCurrentGame(Authentication authentication) {
+        return mapGameDetailsResponse(
+                userService.getCurrentGame(
+                        userService.getCurrentUserId(
+                                authentication
+                        )
+                )
+        );
+    }
+
 
     private Game mapGame(GameCreateRequest gameCreateRequest) {
         return modelMapper.map(gameCreateRequest, Game.class);

@@ -3,13 +3,9 @@ package com.rolnik.shop.services;
 import com.rolnik.shop.BaseTest;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.exceptions.FinishedGameUpdateException;
-import com.rolnik.shop.model.entities.Game;
-import com.rolnik.shop.model.entities.Player;
-import com.rolnik.shop.model.entities.PlayerRound;
-import com.rolnik.shop.model.entities.Round;
+import com.rolnik.shop.model.entities.*;
 import com.rolnik.shop.respositories.GameRepository;
 import com.rolnik.shop.respositories.RoundRepository;
-import org.checkerframework.checker.nullness.Opt;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +27,9 @@ class GameServiceTest extends BaseTest {
     @Mock
     private RoundRepository roundRepository;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private GameService gameService;
 
@@ -40,13 +38,27 @@ class GameServiceTest extends BaseTest {
         //when
         LocalDateTime now = LocalDateTime.now();
         Game game = super.createGame(now, false);
+        User user = super.createBasicUser("username", "email@email.pl", "password");
         //given
         Mockito.when(gameRepository.save(game)).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        Mockito.when(userService.getById(1L)).thenReturn(user);
         //then
-        Game createdGame = gameService.create(game);
+        Game createdGame = gameService.create(game, 1L);
 
         Assert.assertEquals(now, createdGame.getDate());
         Assert.assertEquals(0, createdGame.getRounds().size());
+        Assert.assertEquals(user, game.getUser());
+    }
+
+    @Test
+    void whenCurrentUserInvalid_thenThrowEntityNotFoundException() {
+        //when
+        LocalDateTime now = LocalDateTime.now();
+        Game game = super.createGame(now, false);
+        //given
+        Mockito.when(userService.getById(1L)).thenThrow(EntityNotFoundException.class);
+        //then
+        Assert.assertThrows(EntityNotFoundException.class, () -> gameService.create(game, 1L));
     }
 
     @Test
@@ -145,12 +157,34 @@ class GameServiceTest extends BaseTest {
     @Test
     public void whenGameFinish_ThenGameFinished() {
         //when
-        Game game = createGame(LocalDateTime.now(), false);
+        Game game = super.createGame(LocalDateTime.now(), false);
         //given
         Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
         //then
         Game updatedGame = gameService.finishGame(1L);
 
         Assert.assertTrue(updatedGame.isFinished());
+    }
+
+    @Test
+    public void whenGameFinish_ThenUserGameNull() {
+        //when
+        Game game = super.createGame(LocalDateTime.now(), false);
+        User user = super.createBasicUser("username", "email@Email.pl", "password");
+        user.setCurrentGame(game);
+        //given
+        Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+        Mockito.doAnswer(answer -> {
+            User gameUser = ((Game)answer.getArgument(0)).getUser();
+
+            Assert.assertNotNull(gameUser);
+            gameUser.resetCurrentGame();
+            return null;
+        }).when(userService).resetUserCurrentGame(game);
+        //then
+        Game updatedGame = gameService.finishGame(1L);
+
+        Assert.assertTrue(updatedGame.isFinished());
+        Assert.assertNull(updatedGame.getUser());
     }
 }

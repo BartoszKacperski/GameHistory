@@ -28,8 +28,11 @@ public class User extends SimpleEntity {
     private String email;
     @Size(min = 5, max = 255)
     private String password;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "current_game_id")
+    private Game currentGame;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -37,4 +40,13 @@ public class User extends SimpleEntity {
     )
     private Set<Role> roles;
 
+    public void setCurrentGame(Game game) {
+        this.currentGame = game;
+        game.setUser(this);
+    }
+
+    public void resetCurrentGame() {
+        this.currentGame.setUser(null);
+        this.currentGame = null;
+    }
 }
