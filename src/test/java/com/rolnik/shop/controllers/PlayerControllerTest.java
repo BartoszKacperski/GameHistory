@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -27,6 +28,7 @@ class PlayerControllerTest extends BaseControllerTest {
     private PlayerService playerService;
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenCreateAuthorized_thenReturnPlayerResponseJson() throws Exception {
         //given
         PlayerCreateRequest playerCreateRequest = new PlayerCreateRequest(
@@ -37,8 +39,7 @@ class PlayerControllerTest extends BaseControllerTest {
         //then
         mvc.perform(post("/players")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(super.toJson(playerCreateRequest))
-                .header("Authorization", super.getUserAuthToken()))
+                .content(super.toJson(playerCreateRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.nickname", is("nickname"))
                 );
@@ -61,6 +62,7 @@ class PlayerControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenGetByIdValid_thenReturnPlayerResponseJson() throws Exception {
         //given
         Player player = super.createPlayer(
@@ -69,8 +71,7 @@ class PlayerControllerTest extends BaseControllerTest {
         //when
         Mockito.when(playerService.getById(1L)).thenReturn(player);
         //then
-        mvc.perform(get("/players/1")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(get("/players/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nickname", is("nickname"))
                 );
@@ -91,6 +92,7 @@ class PlayerControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenListValid_thenReturnPlayerResponseJson() throws Exception {
         //given
         Player firstPlayer = super.createPlayer(
@@ -102,8 +104,7 @@ class PlayerControllerTest extends BaseControllerTest {
         //when
         Mockito.when(playerService.getAll()).thenReturn(List.of(firstPlayer, secondPlayer));
         //then
-        mvc.perform(get("/players")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(get("/players"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].nickname", is("firstPlayer")))
@@ -129,6 +130,7 @@ class PlayerControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenUpdateValid_thenReturnPlayerResponseJson() throws Exception {
         //given
         PlayerUpdateRequest playerUpdateRequest = new PlayerUpdateRequest(
@@ -140,8 +142,7 @@ class PlayerControllerTest extends BaseControllerTest {
         //then
         mvc.perform(put("/players")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(super.toJson(playerUpdateRequest))
-                .header("Authorization", super.getUserAuthToken()))
+                .content(super.toJson(playerUpdateRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nickname", is("newNickname"))
                 );
@@ -165,12 +166,12 @@ class PlayerControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenDeleteValid_thenReturnPlayerResponseJson() throws Exception {
         //given
         //when
         //then
-        mvc.perform(delete("/players/1")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(delete("/players/1"))
                 .andExpect(status().isOk()
                 );
     }

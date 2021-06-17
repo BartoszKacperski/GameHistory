@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ class GameControllerTest extends BaseControllerTest {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void whenCreateAuthorized_thenReturnGameResponseJson() throws Exception {
         //given
         LocalDateTime gameDate = LocalDateTime.now();
@@ -45,8 +47,7 @@ class GameControllerTest extends BaseControllerTest {
         //then
         mvc.perform(post("/games")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(super.toJson(gameCreateRequest))
-                .header("Authorization", super.getAdminAuthToken()))
+                .content(super.toJson(gameCreateRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.date", is(formatter.format(gameDate)))
                 );
@@ -68,6 +69,7 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenGetByIdValid_thenReturnGameDetailResponseJson() throws Exception {
         //given
         LocalDateTime gameDate = LocalDateTime.now();
@@ -88,8 +90,7 @@ class GameControllerTest extends BaseControllerTest {
         //when
         Mockito.when(gameService.getById(1L)).thenReturn(game);
         //then
-        mvc.perform(get("/games/1")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(get("/games/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.date", is(formatter.format(gameDate))))
                 .andExpect(jsonPath("$.finished", is(false)))
@@ -115,6 +116,7 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void whenListByAdmin_thenReturnGameDetailResponseJson() throws Exception {
         //given
         LocalDateTime firstGameDate = LocalDateTime.now();
@@ -125,8 +127,7 @@ class GameControllerTest extends BaseControllerTest {
         //when
         Mockito.when(gameService.getAll()).thenReturn(List.of(firstGame, secondGame));
         //then
-        mvc.perform(get("/games")
-                .header("Authorization", super.getAdminAuthToken()))
+        mvc.perform(get("/games"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].date", is(formatter.format(firstGameDate))))
@@ -135,14 +136,14 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenListByUser_thenStatusForbidden() throws Exception {
         //given
         Game game = new Game();
         //when
         Mockito.when(gameService.getAll()).thenReturn(List.of(game));
         //then
-        mvc.perform(get("/games")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(get("/games"))
                 .andExpect(status().isForbidden()
                 );
     }
@@ -160,6 +161,7 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenListFinishedValid_thenReturnGameDetailResponseJson() throws Exception {
         //given
         LocalDateTime firstGameDate = LocalDateTime.now();
@@ -170,8 +172,7 @@ class GameControllerTest extends BaseControllerTest {
         //when
         Mockito.when(gameService.getAllFinished()).thenReturn(List.of(firstGame, secondGame));
         //then
-        mvc.perform(get("/games/finished")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(get("/games/finished"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].date", is(formatter.format(firstGameDate))))
@@ -180,19 +181,20 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenListFinishedByUser_thenStatusForbidden() throws Exception {
         //given
         Game game = new Game();
         //when
         Mockito.when(gameService.getAll()).thenReturn(List.of(game));
         //then
-        mvc.perform(get("/games/finished")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(get("/games/finished"))
                 .andExpect(status().isOk()
                 );
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenFinishValid_thenStatusOk() throws Exception {
         //given
         LocalDateTime now = LocalDateTime.now();
@@ -200,8 +202,7 @@ class GameControllerTest extends BaseControllerTest {
         //when
         Mockito.when(gameService.finishGame(1L)).thenReturn(game);
         //then
-        mvc.perform(put("/games/1/finish")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(put("/games/1/finish"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.date", is(formatter.format(now)))
                 );
@@ -219,12 +220,12 @@ class GameControllerTest extends BaseControllerTest {
 
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenDeleteValid_thenReturnPlayerResponseJson() throws Exception {
         //given
         //when
         //then
-        mvc.perform(delete("/games/1")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(delete("/games/1"))
                 .andExpect(status().isOk()
                 );
     }
@@ -240,6 +241,7 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenRoundValid_thenReturnRoundResponseJson() throws Exception {
         //given
         RoundAddRequest roundAddRequest = new RoundAddRequest(
@@ -258,7 +260,6 @@ class GameControllerTest extends BaseControllerTest {
         Mockito.when(gameService.addRound(Mockito.anyLong(), Mockito.any(Round.class))).thenAnswer(a -> a.getArgument(1));
         //then
         mvc.perform(put("/games/1/addRound")
-                .header("Authorization", super.getUserAuthToken())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(super.toJson(roundAddRequest)))
                 .andExpect(status().isOk())
@@ -279,6 +280,7 @@ class GameControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void whenGetCurrentGameValid_thenReturnCurrentGameDetailsResponseJson() throws Exception {
         //given
         LocalDateTime gameDate = LocalDateTime.now();
@@ -299,8 +301,7 @@ class GameControllerTest extends BaseControllerTest {
         //when
         Mockito.when(userService.getCurrentGame(Mockito.anyLong())).thenReturn(game);
         //then
-        mvc.perform(get("/games/currentGame")
-                .header("Authorization", super.getUserAuthToken()))
+        mvc.perform(get("/games/currentGame"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.date", is(formatter.format(gameDate))))
                 .andExpect(jsonPath("$.finished", is(false)))

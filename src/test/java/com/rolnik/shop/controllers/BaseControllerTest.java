@@ -43,29 +43,4 @@ public class BaseControllerTest extends BaseTest {
 
         return mapper.writeValueAsBytes(object);
     }
-
-    protected String getUserAuthToken() throws Exception {
-        JSONObject userAuthBody = new JSONObject()
-                .accumulate("username", "user")
-                .accumulate("password", "password");
-
-        return getAuthToken(userAuthBody);
-    }
-
-    protected String getAdminAuthToken() throws Exception {
-        JSONObject adminAuthBody = new JSONObject()
-                .accumulate("username", "admin")
-                .accumulate("password", "password");
-
-        return getAuthToken(adminAuthBody);
-    }
-
-    private String getAuthToken(JSONObject authBody) throws Exception {
-        ResultActions result = mvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(authBody.toString()))
-                .andExpect(status().isOk());
-
-        return "Bearer: " + result.andReturn().getResponse().getContentAsString();
-    }
 }
