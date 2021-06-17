@@ -6,20 +6,21 @@ import org.assertj.core.util.Sets;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class BaseTest {
 
-    protected Game createGame(LocalDateTime gameDate,
-                              boolean finished,
-                              Round... rounds) {
-        return createGame(gameDate, finished, null, rounds);
+    protected Game createGame(LocalDateTime gameDate) {
+        return this.createGame(
+                gameDate,
+                false
+        );
     }
 
     protected Game createGame(LocalDateTime gameDate,
                               boolean finished,
-                              User user,
                               Round... rounds) {
-        Game game = new Game(gameDate, new ArrayList<>(), finished, user);
+        Game game = new Game(gameDate, new ArrayList<>(), finished);
 
         for (Round round : rounds) {
             game.addRound(round);
@@ -48,6 +49,14 @@ public class BaseTest {
         }
 
         return round;
+    }
+
+    protected User createBasicUser() {
+        return this.createBasicUser(
+                "user",
+                "user@email.pl",
+                "password"
+        );
     }
 
     protected User createBasicUser(String username, String email, String password) {

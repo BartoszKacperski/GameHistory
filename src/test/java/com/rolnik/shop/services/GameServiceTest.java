@@ -3,6 +3,7 @@ package com.rolnik.shop.services;
 import com.rolnik.shop.BaseTest;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.exceptions.FinishedGameUpdateException;
+import com.rolnik.shop.exceptions.FinishingNotOwnCurrentGameException;
 import com.rolnik.shop.model.entities.*;
 import com.rolnik.shop.respositories.GameRepository;
 import com.rolnik.shop.respositories.RoundRepository;
@@ -41,24 +42,12 @@ class GameServiceTest extends BaseTest {
         User user = super.createBasicUser("username", "email@email.pl", "password");
         //given
         Mockito.when(gameRepository.save(game)).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-        Mockito.when(userService.getById(1L)).thenReturn(user);
         //then
-        Game createdGame = gameService.create(game, 1L);
+        Game createdGame = gameService.create(game, user);
 
         Assert.assertEquals(now, createdGame.getDate());
         Assert.assertEquals(0, createdGame.getRounds().size());
-        Assert.assertEquals(user, game.getUser());
-    }
-
-    @Test
-    void whenCurrentUserInvalid_thenThrowEntityNotFoundException() {
-        //when
-        LocalDateTime now = LocalDateTime.now();
-        Game game = super.createGame(now, false);
-        //given
-        Mockito.when(userService.getById(1L)).thenThrow(EntityNotFoundException.class);
-        //then
-        Assert.assertThrows(EntityNotFoundException.class, () -> gameService.create(game, 1L));
+        Assert.assertEquals(game, user.getCurrentGame());
     }
 
     @Test
@@ -157,11 +146,14 @@ class GameServiceTest extends BaseTest {
     @Test
     public void whenGameFinish_ThenGameFinished() {
         //when
+        User user = super.createBasicUser();
         Game game = super.createGame(LocalDateTime.now(), false);
+
+        user.setCurrentGame(game);
         //given
         Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
         //then
-        Game updatedGame = gameService.finishGame(1L);
+        Game updatedGame = gameService.finishGame(1L, user);
 
         Assert.assertTrue(updatedGame.isFinished());
     }
@@ -174,17 +166,25 @@ class GameServiceTest extends BaseTest {
         user.setCurrentGame(game);
         //given
         Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
-        Mockito.doAnswer(answer -> {
-            User gameUser = ((Game)answer.getArgument(0)).getUser();
-
-            Assert.assertNotNull(gameUser);
-            gameUser.resetCurrentGame();
-            return null;
-        }).when(userService).resetUserCurrentGame(game);
         //then
-        Game updatedGame = gameService.finishGame(1L);
+        Game updatedGame = gameService.finishGame(1L, user);
 
         Assert.assertTrue(updatedGame.isFinished());
-        Assert.assertNull(updatedGame.getUser());
+        Assert.assertNull(user.getCurrentGame());
+    }
+
+    @Test
+    public void whenFinishNotOwnGame_ThenThrowFinishingNotOwnCurrentGameException() {
+        //when
+        User firstUser = super.createBasicUser();
+        User secondUser = super.createBasicUser();
+        Game game = super.createGame(LocalDateTime.now(), false);
+
+        firstUser.setCurrentGame(game);
+        //given
+        Mockito.when(gameRepository.findById(1L)).thenReturn(Optional.of(game));
+        //then
+        Assert.assertThrows(FinishingNotOwnCurrentGameException.class, () -> gameService.finishGame(1L, secondUser));
+
     }
 }

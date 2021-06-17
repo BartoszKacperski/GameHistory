@@ -7,7 +7,7 @@
     <changeSet author="bartosz.kacperski" id="12.02.2021-1">
         <addColumn tableName="users">
             <column name="current_game_id" type="BIGINT">
-                <constraints references="games(id)" foreignKeyName="playerGameForeignKey" nullable="true"/>
+                <constraints references="games(id)" foreignKeyName="userCurrentGameForeignKey" nullable="true"/>
             </column>
         </addColumn>
     </changeSet>

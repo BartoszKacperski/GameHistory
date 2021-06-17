@@ -8,6 +8,8 @@ import com.rolnik.shop.dtos.round.RoundAddRequest;
 import com.rolnik.shop.dtos.round.RoundAddResponse;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.Round;
+import com.rolnik.shop.model.entities.User;
+import com.rolnik.shop.security.UserAuthDetails;
 import com.rolnik.shop.services.GameService;
 import com.rolnik.shop.services.UserService;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -36,11 +39,11 @@ public class GameController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public GameCreateResponse create(@RequestBody GameCreateRequest gameCreateRequest, Authentication authentication) {
+    public GameCreateResponse create(@RequestBody GameCreateRequest gameCreateRequest, @AuthenticationPrincipal UserAuthDetails userAuthDetails) {
         return mapGame(
                 gameService.create(
                         mapGame(gameCreateRequest),
-                        userService.getCurrentUserId(authentication)
+                        userAuthDetails.getUser()
                 )
         );
     }
@@ -55,6 +58,7 @@ public class GameController {
     }
 
     @GetMapping(
+            value = "/all",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
@@ -85,8 +89,8 @@ public class GameController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public GameShortDetails finish(@PathVariable Long id) {
-        return mapGameShortDetailsResponse(gameService.finishGame(id));
+    public GameShortDetails finish(@PathVariable Long id, @AuthenticationPrincipal UserAuthDetails userAuthDetails) {
+        return mapGameShortDetailsResponse(gameService.finishGame(id, userAuthDetails.getUser()));
     }
 
     @PutMapping(
@@ -103,13 +107,9 @@ public class GameController {
             value = "currentGame",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public GameDetailsResponse getCurrentGame(Authentication authentication) {
+    public GameDetailsResponse getCurrentGame(@AuthenticationPrincipal UserAuthDetails userAuthDetails) {
         return mapGameDetailsResponse(
-                userService.getCurrentGame(
-                        userService.getCurrentUserId(
-                                authentication
-                        )
-                )
+                userService.getCurrentGame(userAuthDetails.getUser())
         );
     }
 

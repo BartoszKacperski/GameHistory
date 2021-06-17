@@ -11,5 +11,5 @@
     <include file="v1.0/initial_game.xml" relativeToChangelogFile="true"/>
     <include file="v1.0/initial_round.xml" relativeToChangelogFile="true"/>
     <include file="v1.0/initial_player_round.xml" relativeToChangelogFile="true"/>
-    <include file="v1.0/player_current_game.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0/user_current_game.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

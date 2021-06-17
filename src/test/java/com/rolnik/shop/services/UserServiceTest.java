@@ -154,12 +154,11 @@ class UserServiceTest extends BaseTest {
 
         user.setCurrentGame(game);
         //when
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         //then
-        Game foundGame = userService.getCurrentGame(1L);
+        Game foundGame = userService.getCurrentGame(user);
 
         Assert.assertEquals(now, foundGame.getDate());
-        Assert.assertEquals(user, foundGame.getUser());
+        Assert.assertEquals(game, user.getCurrentGame());
         Assert.assertFalse(game.isFinished());
     }
 
@@ -172,55 +171,9 @@ class UserServiceTest extends BaseTest {
                 "test"
         );
         //when
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         //then
-        Game foundGame = userService.getCurrentGame(1L);
+        Game foundGame = userService.getCurrentGame(user);
 
         Assert.assertNull(foundGame);
-    }
-
-    @Test
-    public void whenGetCurrentGame_thenThrowEntityNotFoundException() {
-        //given
-        User user = super.createBasicUser(
-                "username",
-                "test@test.pl",
-                "test"
-        );
-        LocalDateTime now = LocalDateTime.now();
-        Game game = super.createGame(
-                now,
-                false
-        );
-
-        user.setCurrentGame(game);
-        //when
-        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.empty());
-        //then
-        Assert.assertThrows(EntityNotFoundException.class, () -> userService.getCurrentGame(1L));
-    }
-
-    @Test
-    public void whenResetCurrentGame_thenUserGameNull() {
-        //given
-        User user = super.createBasicUser(
-                "username",
-                "test@test.pl",
-                "test"
-        );
-        LocalDateTime now = LocalDateTime.now();
-        Game game = super.createGame(
-                now,
-                false
-        );
-
-        user.setCurrentGame(game);
-        //when
-        Mockito.when(userRepository.findByCurrentGame(game)).thenReturn(Optional.of(user));
-        //then
-        userService.resetUserCurrentGame(game);
-
-        Assert.assertNull(user.getCurrentGame());
-        Assert.assertNull(game.getUser());
     }
 }

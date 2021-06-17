@@ -3,6 +3,7 @@ package com.rolnik.shop.services;
 import com.rolnik.shop.exceptions.CurrentGameAlreadyExistsException;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.exceptions.FinishedGameUpdateException;
+import com.rolnik.shop.exceptions.FinishingNotOwnCurrentGameException;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.PlayerRound;
 import com.rolnik.shop.model.entities.Round;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,12 +26,9 @@ import java.util.List;
 public class GameService {
     private final GameRepository gameRepository;
     private final RoundRepository roundRepository;
-    private final UserService userService;
 
     @Transactional
-    public Game create(@Valid Game game, Long userId) {
-        User user = userService.getById(userId);
-
+    public Game create(@Valid Game game, User user) {
         Game createdGame = gameRepository.save(game);
 
         if (user.getCurrentGame() != null) {
@@ -58,11 +57,14 @@ public class GameService {
     }
 
     @Transactional
-    public Game finishGame(Long id) {
+    public Game finishGame(Long id, User user) {
         Game game = this.getById(id);
 
+        if (!game.equals(user.getCurrentGame())) {
+            throw new FinishingNotOwnCurrentGameException();
+        }
         game.setFinished(true);
-        userService.resetUserCurrentGame(game);
+        user.setCurrentGame(null);
 
         return game;
     }

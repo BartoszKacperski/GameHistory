@@ -31,19 +31,8 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public User getById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(User.class));
-    }
-
-    public Game getCurrentGame(Long userId) {
-        return this.getById(userId).getCurrentGame();
-    }
-
-    public void resetUserCurrentGame(Game game) {
-        Optional<User> user = userRepository.findByCurrentGame(game);
-
-        user.ifPresent(User::resetCurrentGame);
+    public Game getCurrentGame(User user) {
+        return user.getCurrentGame();
     }
 
     public User registerUser(@Valid User user) {
@@ -68,16 +57,6 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("userNotFound"));
 
         return new UserAuthDetails(user);
-    }
-
-    public Long getCurrentUserId(Authentication authentication) {
-        Object user = authentication.getPrincipal();
-
-        if (user instanceof UserAuthDetails) {
-            return ((UserAuthDetails)user).getId();
-        }
-
-        return 1L;
     }
 
     private void checkUserCredentialsInUse(User user) {

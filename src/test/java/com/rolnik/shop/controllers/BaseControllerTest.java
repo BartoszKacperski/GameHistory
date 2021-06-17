@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 @ContextConfiguration(classes = {SecurityTestConfig.class, BCryptPasswordEncoderConfig.class, SecurityConfig.class, JWTConfig.class, ModelMapper.class})
 public class BaseControllerTest extends BaseTest {
-    @MockBean(name = "userService")
+    @MockBean
     protected UserService userService;
     @Autowired
     protected MockMvc mvc;

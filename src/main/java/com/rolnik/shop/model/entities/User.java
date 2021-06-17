@@ -40,11 +40,9 @@ public class User extends SimpleEntity {
 
     public void setCurrentGame(Game game) {
         this.currentGame = game;
-        game.setUser(this);
     }
 
     public void resetCurrentGame() {
-        this.currentGame.setUser(null);
         this.currentGame = null;
     }
 }
