@@ -1,6 +1,6 @@
 package com.rolnik.shop.model.entities;
 
-import com.rolnik.shop.model.entities.base.SimpleEntity;
+import com.rolnik.shop.model.entities.base.SimpleEntityWithDates;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User extends SimpleEntity {
+public class User extends SimpleEntityWithDates {
     @Size(min = 3, max = 255)
     @Column(unique=true)
     private String username;
