@@ -26,8 +26,7 @@ import java.io.IOException;
         BCryptPasswordEncoderConfig.class,
         SecurityConfig.class,
         JWTConfig.class,
-        ModelMapper.class,
-        JpaAuditingTestConfig.class
+        ModelMapper.class
 })
 public class BaseControllerTest extends BaseTest {
     @MockBean

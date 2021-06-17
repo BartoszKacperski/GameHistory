@@ -1,7 +1,7 @@
 package com.rolnik.shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.rolnik.shop.model.entities.base.SimpleEntityWithDates;
+import com.rolnik.shop.model.entities.base.SimpleEntityWithDatesAndAuditUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "player_rounds")
-public class PlayerRound extends SimpleEntityWithDates {
+public class PlayerRound extends SimpleEntityWithDatesAndAuditUser {
     @Digits(integer=18, fraction=2)
     private BigDecimal point;
     @ManyToOne

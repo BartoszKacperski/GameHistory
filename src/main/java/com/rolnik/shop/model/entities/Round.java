@@ -2,7 +2,7 @@ package com.rolnik.shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rolnik.shop.model.entities.base.SimpleEntityWithDates;
+import com.rolnik.shop.model.entities.base.SimpleEntityWithDatesAndAuditUser;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @ToString(exclude = "playerRounds")
 
 @Entity(name = "rounds")
-public class Round extends SimpleEntityWithDates {
+public class Round extends SimpleEntityWithDatesAndAuditUser {
     @ManyToOne
     @JoinColumn(name = "game_id")
     @JsonBackReference

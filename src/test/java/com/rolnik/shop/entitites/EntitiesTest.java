@@ -1,6 +1,8 @@
 package com.rolnik.shop.entitites;
 
 import com.rolnik.shop.BaseTest;
+import com.rolnik.shop.config.JpaAuditConfig;
+import com.rolnik.shop.config.JpaAuditingTestConfig;
 import com.rolnik.shop.model.entities.*;
 import com.rolnik.shop.model.entities.base.SimpleEntityWithDates;
 import org.junit.Assert;
@@ -9,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -17,6 +20,7 @@ import java.util.function.Function;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@Import(JpaAuditingTestConfig.class)
 class EntitiesTest extends BaseTest {
 
     @Autowired
