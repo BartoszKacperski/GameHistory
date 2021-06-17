@@ -1,7 +1,7 @@
 package com.rolnik.shop.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.rolnik.shop.model.entities.base.SimpleEntityWithDates;
+import com.rolnik.shop.model.entities.base.SimpleEntityWithDatesAndAuditUser;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "games")
-public class Game extends SimpleEntityWithDates {
+public class Game extends SimpleEntityWithDatesAndAuditUser {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime date;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

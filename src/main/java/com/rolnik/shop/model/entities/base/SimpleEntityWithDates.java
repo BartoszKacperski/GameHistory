@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
@@ -16,13 +18,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 
+@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class SimpleEntityWithDates extends SimpleEntity {
-    @CreationTimestamp
+    @CreatedDate
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime creationDate;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(name = "last_update_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime lastUpdateDate;
 }

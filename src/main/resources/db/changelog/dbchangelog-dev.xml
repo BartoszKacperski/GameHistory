@@ -13,4 +13,5 @@
     <include file="v1.0/initial_player_round.xml" relativeToChangelogFile="true"/>
     <include file="v1.0/user_current_game.xml" relativeToChangelogFile="true"/>
     <include file="v1.0/initial_creation_and_modification_dates.xml" relativeToChangelogFile="true"/>
+    <include file="v1.0/initial_user_auditing.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

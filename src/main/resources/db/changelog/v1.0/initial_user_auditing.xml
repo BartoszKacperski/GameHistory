@@ -1,0 +1,42 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+    <changeSet author="bartosz.kacperski" id="17.06.2021-1">
+        <addColumn tableName="player_rounds">
+            <column name="created_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="playerRoundsCreatedByForeignKey" nullable="true"/>
+            </column>
+            <column name="last_updated_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="playerRoundsLastUpdatedByForeignKey" nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="rounds">
+            <column name="created_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="roundsCreatedByForeignKey" nullable="true"/>
+            </column>
+            <column name="last_updated_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="roundsLastUpdatedByForeignKey" nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="players">
+            <column name="created_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="playersCreatedByForeignKey" nullable="true"/>
+            </column>
+            <column name="last_updated_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="playersLastUpdatedByForeignKey" nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="games">
+            <column name="created_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="gamesCreatedByForeignKey" nullable="true"/>
+            </column>
+            <column name="last_updated_by" type="BIGINT">
+                <constraints references="users(id)" foreignKeyName="gamesLastUpdatedByForeignKey" nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
