@@ -1,6 +1,6 @@
 package com.rolnik.shop.model.entities;
 
-import com.rolnik.shop.model.entities.base.SimpleEntityWithDates;
+import com.rolnik.shop.model.entities.base.SimpleEntityWithDatesAndAuditUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "players")
-public class Player extends SimpleEntityWithDates {
+public class Player extends SimpleEntityWithDatesAndAuditUser {
     @Size(min = 3, max = 255)
     private String nickname;
 }
