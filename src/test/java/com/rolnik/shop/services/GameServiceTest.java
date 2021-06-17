@@ -1,6 +1,7 @@
 package com.rolnik.shop.services;
 
 import com.rolnik.shop.BaseTest;
+import com.rolnik.shop.exceptions.CurrentGameAlreadyExistsException;
 import com.rolnik.shop.exceptions.EntityNotFoundException;
 import com.rolnik.shop.exceptions.FinishedGameUpdateException;
 import com.rolnik.shop.exceptions.FinishingNotOwnCurrentGameException;
@@ -48,6 +49,20 @@ class GameServiceTest extends BaseTest {
         Assert.assertEquals(now, createdGame.getDate());
         Assert.assertEquals(0, createdGame.getRounds().size());
         Assert.assertEquals(game, user.getCurrentGame());
+    }
+
+    @Test
+    public void whenUserHasCurrentGame_ThenThrowCurrentGameAlreadyExistsException() {
+        //when
+        User user = super.createBasicUser();
+        Game firstGame = super.createGame(LocalDateTime.now(), true);
+        Game secondGame = super.createGame(LocalDateTime.now(), true);
+
+        user.setCurrentGame(firstGame);
+        //given
+        Mockito.when(gameRepository.save(secondGame)).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        //then
+        Assert.assertThrows(CurrentGameAlreadyExistsException.class, () -> gameService.create(secondGame, user));
     }
 
     @Test
@@ -187,4 +202,23 @@ class GameServiceTest extends BaseTest {
         Assert.assertThrows(FinishingNotOwnCurrentGameException.class, () -> gameService.finishGame(1L, secondUser));
 
     }
+
+    @Test
+    public void whenGetAllFinished_ThenListContainsOnlyFinishedGames() {
+        //when
+        Game firstGame = super.createGame(LocalDateTime.now(), true);
+        Game secondGame = super.createGame(LocalDateTime.now(), true);
+        Game thirdGame = super.createGame(LocalDateTime.now(), true);
+
+        //given
+        Mockito.when(gameRepository.getAllByFinished(true)).thenReturn(List.of(firstGame, secondGame, thirdGame));
+        //then
+        List<Game> finishedGames = gameService.getAllFinished();
+
+        Assert.assertEquals(3 , finishedGames.size());
+        Assert.assertTrue(finishedGames.contains(firstGame));
+        Assert.assertTrue(finishedGames.contains(secondGame));
+        Assert.assertTrue(finishedGames.contains(thirdGame));
+    }
+
 }
