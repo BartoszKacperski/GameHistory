@@ -20,9 +20,16 @@ public class JpaAuditConfig {
                 SecurityContextHolder.getContext().getAuthentication() == null) {
                 return Optional.empty();
             }
-            UserAuthDetails userAuthDetails = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication();
 
-            return Optional.ofNullable(userAuthDetails.getUser());
+            if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof UserAuthDetails) {
+                UserAuthDetails userAuthDetails = (UserAuthDetails) SecurityContextHolder.getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+
+                return Optional.ofNullable(userAuthDetails.getUser());
+            }
+
+            return Optional.empty();
         };
     }
 }

@@ -27,8 +27,12 @@ public class PlayerController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public Player create(@RequestBody PlayerCreateRequest playerCreateRequest) {
-        return playerService.create(mapPlayer(playerCreateRequest));
+    public PlayerResponse create(@RequestBody PlayerCreateRequest playerCreateRequest) {
+        return mapPlayer(
+                playerService.create(
+                        mapPlayer(playerCreateRequest)
+                )
+        );
     }
 
     @GetMapping(
@@ -53,8 +57,12 @@ public class PlayerController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public Player update(@RequestBody PlayerUpdateRequest playerUpdateRequest) {
-        return playerService.update(mapPlayer(playerUpdateRequest));
+    public PlayerResponse update(@RequestBody PlayerUpdateRequest playerUpdateRequest) {
+        return mapPlayer(
+                playerService.update(
+                        mapPlayer(playerUpdateRequest)
+                )
+        );
     }
 
     @DeleteMapping(
