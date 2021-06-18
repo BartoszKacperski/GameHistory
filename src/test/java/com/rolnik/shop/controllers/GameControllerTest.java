@@ -6,11 +6,9 @@ import com.rolnik.shop.exceptions.FinishingNotOwnCurrentGameException;
 import com.rolnik.shop.model.entities.Game;
 import com.rolnik.shop.model.entities.Round;
 import com.rolnik.shop.model.entities.User;
-import com.rolnik.shop.respositories.PlayerRepository;
 import com.rolnik.shop.services.GameService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -25,9 +23,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

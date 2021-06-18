@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -18,13 +19,16 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends SimpleEntityWithDates {
     @Size(min = 3, max = 255)
+    @NotNull
     @Column(unique=true)
     private String username;
     @Size(min = 3, max = 255)
     @Email
+    @NotNull
     @Column(unique=true)
     private String email;
     @Size(min = 5, max = 255)
+    @NotNull
     private String password;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "current_game_id")

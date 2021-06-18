@@ -23,4 +23,10 @@
         <addUniqueConstraint tableName="users" columnNames="username, email"/>
     </changeSet>
 
+    <changeSet author="bartosz.kacperski" id="18-06-2021-1">
+        <addNotNullConstraint tableName="users" columnName="username"/>
+        <addNotNullConstraint tableName="users" columnName="email"/>
+        <addNotNullConstraint tableName="users" columnName="password"/>
+    </changeSet>
+
 </databaseChangeLog>

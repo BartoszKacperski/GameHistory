@@ -2,6 +2,7 @@ package com.rolnik.shop.errorhandling;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
@@ -18,7 +19,7 @@ public class ConstrainViolationErrorInfo {
     public ConstrainViolationErrorInfo(ConstraintViolation<?> violation) {
         this.className = violation.getLeafBean().getClass().getSimpleName();
         this.property = resolvePropertyName(violation.getPropertyPath());
-        this.invalidValue = violation.getInvalidValue().toString();
+        this.invalidValue = violation.getInvalidValue() != null ? violation.getInvalidValue().toString() : "null";
         this.message = violation.getMessage();
     }
 
