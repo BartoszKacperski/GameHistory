@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +36,7 @@ public class UserService implements UserDetailsService {
         return user.getCurrentGame();
     }
 
+    @Transactional
     public User registerUser(@Valid User user) {
         checkUserCredentialsInUse(user);
         String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
