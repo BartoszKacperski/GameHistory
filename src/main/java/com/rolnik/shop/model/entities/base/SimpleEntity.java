@@ -2,6 +2,7 @@ package com.rolnik.shop.model.entities.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.GeneratedValue;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 
 @MappedSuperclass
 public abstract class SimpleEntity implements Serializable {
